@@ -1,0 +1,57 @@
+@page
+@using VumbaSoft.AdventureWorksAbp.Permissions
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.Localities.Locality
+@using VumbaSoft.AdventureWorksAbp.Localization
+@using VumbaSoft.AdventureWorksAbp.Web.Menus
+@model IndexModel
+@inject IPageLayout PageLayout
+@inject IHtmlLocalizer<AdventureWorksAbpResource> L
+@inject IAuthorizationService Authorization
+@{
+    PageLayout.Content.Title = L["Locality"].Value;
+    PageLayout.Content.BreadCrumb.Add(L["Menu:Locality"].Value);
+    PageLayout.Content.MenuItemName = AdventureWorksAbpMenus.Locality;
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/Demographics/Localities/Locality/index.js" />
+}
+@section styles
+{
+    <abp-style src="/Pages/Demographics/Localities/Locality/index.css"/>
+}
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <abp-column size-md="_6">
+                <abp-card-title>@L["Locality"]</abp-card-title>
+            </abp-column>
+            <abp-column size-md="_6" class="text-end">
+			    @if (await Authorization.IsGrantedAsync(AdventureWorksAbpPermissions.Locality.Create))
+                {
+                <abp-button id="NewLocalityButton"
+                            text="@L["CreateLocality"].Value"
+                            icon="plus"
+                            button-type="Primary" />
+                }
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-row class="mb-3">
+            <a abp-collapse-id="LocalityCollapse" class="text-secondary">@L["TableFilter"] </a>
+        </abp-row>
+        <abp-dynamic-form abp-model="LocalityFilter" id="LocalityFilter" required-symbols="false" column-size="_3">
+            <abp-collapse-body id="LocalityCollapse">
+                <abp-form-content />
+            </abp-collapse-body>
+        </abp-dynamic-form>
+        <hr />
+        <abp-table striped-rows="true" id="LocalityTable" class="nowrap"/>
+    </abp-card-body>
+</abp-card>

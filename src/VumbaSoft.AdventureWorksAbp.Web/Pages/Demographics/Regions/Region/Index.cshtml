@@ -1,0 +1,57 @@
+@page
+@using VumbaSoft.AdventureWorksAbp.Permissions
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.Regions.Region
+@using VumbaSoft.AdventureWorksAbp.Localization
+@using VumbaSoft.AdventureWorksAbp.Web.Menus
+@model IndexModel
+@inject IPageLayout PageLayout
+@inject IHtmlLocalizer<AdventureWorksAbpResource> L
+@inject IAuthorizationService Authorization
+@{
+    PageLayout.Content.Title = L["Region"].Value;
+    PageLayout.Content.BreadCrumb.Add(L["Menu:Region"].Value);
+    PageLayout.Content.MenuItemName = AdventureWorksAbpMenus.Region;
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/Demographics/Regions/Region/index.js" />
+}
+@section styles
+{
+    <abp-style src="/Pages/Demographics/Regions/Region/index.css"/>
+}
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <abp-column size-md="_6">
+                <abp-card-title>@L["Region"]</abp-card-title>
+            </abp-column>
+            <abp-column size-md="_6" class="text-end">
+			    @if (await Authorization.IsGrantedAsync(AdventureWorksAbpPermissions.Region.Create))
+                {
+                <abp-button id="NewRegionButton"
+                            text="@L["CreateRegion"].Value"
+                            icon="plus"
+                            button-type="Primary" />
+                }
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-row class="mb-3">
+            <a abp-collapse-id="RegionCollapse" class="text-secondary">@L["TableFilter"] </a>
+        </abp-row>
+        <abp-dynamic-form abp-model="RegionFilter" id="RegionFilter" required-symbols="false" column-size="_3">
+            <abp-collapse-body id="RegionCollapse">
+                <abp-form-content />
+            </abp-collapse-body>
+        </abp-dynamic-form>
+        <hr />
+        <abp-table striped-rows="true" id="RegionTable" class="nowrap"/>
+    </abp-card-body>
+</abp-card>

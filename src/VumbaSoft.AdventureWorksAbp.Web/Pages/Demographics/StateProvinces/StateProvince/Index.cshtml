@@ -1,0 +1,57 @@
+@page
+@using VumbaSoft.AdventureWorksAbp.Permissions
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.StateProvinces.StateProvince
+@using VumbaSoft.AdventureWorksAbp.Localization
+@using VumbaSoft.AdventureWorksAbp.Web.Menus
+@model IndexModel
+@inject IPageLayout PageLayout
+@inject IHtmlLocalizer<AdventureWorksAbpResource> L
+@inject IAuthorizationService Authorization
+@{
+    PageLayout.Content.Title = L["StateProvince"].Value;
+    PageLayout.Content.BreadCrumb.Add(L["Menu:StateProvince"].Value);
+    PageLayout.Content.MenuItemName = AdventureWorksAbpMenus.StateProvince;
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/Demographics/StateProvinces/StateProvince/index.js" />
+}
+@section styles
+{
+    <abp-style src="/Pages/Demographics/StateProvinces/StateProvince/index.css"/>
+}
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <abp-column size-md="_6">
+                <abp-card-title>@L["StateProvince"]</abp-card-title>
+            </abp-column>
+            <abp-column size-md="_6" class="text-end">
+			    @if (await Authorization.IsGrantedAsync(AdventureWorksAbpPermissions.StateProvince.Create))
+                {
+                <abp-button id="NewStateProvinceButton"
+                            text="@L["CreateStateProvince"].Value"
+                            icon="plus"
+                            button-type="Primary" />
+                }
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-row class="mb-3">
+            <a abp-collapse-id="StateProvinceCollapse" class="text-secondary">@L["TableFilter"] </a>
+        </abp-row>
+        <abp-dynamic-form abp-model="StateProvinceFilter" id="StateProvinceFilter" required-symbols="false" column-size="_3">
+            <abp-collapse-body id="StateProvinceCollapse">
+                <abp-form-content />
+            </abp-collapse-body>
+        </abp-dynamic-form>
+        <hr />
+        <abp-table striped-rows="true" id="StateProvinceTable" class="nowrap"/>
+    </abp-card-body>
+</abp-card>
