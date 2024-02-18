@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using VumbaSoft.AdventureWorksAbp.Demographics.Subcontinents;
 using VumbaSoft.AdventureWorksAbp.Demographics.Subcontinents.Dtos;
 using VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.Subcontinents.Subcontinent.ViewModels;
@@ -16,6 +19,8 @@ public class EditModalModel : AdventureWorksAbpPageModel
     [BindProperty]
     public EditSubcontinentViewModel ViewModel { get; set; }
 
+    //public List<SelectListItem> Continents { get; set; } = new List<SelectListItem>();
+
     private readonly ISubcontinentAppService _service;
 
     public EditModalModel(ISubcontinentAppService service)
@@ -27,6 +32,12 @@ public class EditModalModel : AdventureWorksAbpPageModel
     {
         var dto = await _service.GetAsync(Id);
         ViewModel = ObjectMapper.Map<SubcontinentDto, EditSubcontinentViewModel>(dto);
+
+        //var continentLookup = await _service.GetContinentLookupAsync();
+
+        //Continents = continentLookup.Items
+        //    .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
+        //    .ToList();
     }
 
     public virtual async Task<IActionResult> OnPostAsync()

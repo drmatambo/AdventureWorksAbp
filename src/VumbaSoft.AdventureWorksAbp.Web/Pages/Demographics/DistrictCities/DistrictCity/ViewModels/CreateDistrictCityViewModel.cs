@@ -1,14 +1,17 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
 
 namespace VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.DistrictCities.DistrictCity.ViewModels;
 
 public class CreateDistrictCityViewModel
 {
     [Display(Name = "DistrictCityCountryId")]
+    [SelectItems(nameof(CreateModalModel.Countries))]
     public Guid CountryId { get; set; }
 
     [Display(Name = "DistrictCityStateProvinceId")]
+    [SelectItems(nameof(CreateModalModel.Provinces))]
     public Guid StateProvinceId { get; set; }
 
     [Display(Name = "DistrictCityName")]
@@ -29,6 +32,7 @@ public class CreateDistrictCityViewModel
     [Display(Name = "DistrictCityLongitude")]
     public Decimal Longitude { get; set; }
 
+    [TextArea]
     [Display(Name = "DistrictCityRemarks")]
     public String Remarks { get; set; }
 }

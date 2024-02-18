@@ -32,7 +32,7 @@ $(function () {
         searching: false,//disable default searchbox
         autoWidth: false,
         scrollCollapse: true,
-        order: [[0, "asc"]],
+        order: [[1, "asc"]],
         ajax: abp.libs.datatables.createAjax(service.getList,getFilter),
         columnDefs: [
             {

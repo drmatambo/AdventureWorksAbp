@@ -9,8 +9,10 @@ namespace VumbaSoft.AdventureWorksAbp.Demographics.Countries.Dtos;
 public class CountryDto : FullAuditedEntityDto<Guid>
 {
     public Guid ContinentId { get; set; }
+    public String ContinentName { get; set; }
 
     public Guid SubcontinentId { get; set; }
+    public String SubcontinentName { get; set; }
 
     public String Name { get; set; }
 

@@ -1,4 +1,5 @@
 using Shouldly;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -11,6 +12,11 @@ public class ContinentAppServiceTests : AdventureWorksAbpApplicationTestBase
     public ContinentAppServiceTests()
     {
         _continentAppService = GetRequiredService<IContinentAppService>();
+    }
+
+    private T GetRequiredService<T>()
+    {
+        throw new NotImplementedException();
     }
 
     /*

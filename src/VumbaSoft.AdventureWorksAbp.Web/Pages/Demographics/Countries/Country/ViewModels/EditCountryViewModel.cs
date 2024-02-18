@@ -1,15 +1,29 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
 
 namespace VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.Countries.Country.ViewModels;
 
 public class EditCountryViewModel
 {
-    [Display(Name = "CountryContinentId")]
-    public Guid ContinentId { get; set; }
+    //[DisabledInput]
+    //[Display(Name = "CountryContinentId")]
+    //[SelectItems(nameof(EditModalModel.CountryContinents))]
+    //public Guid ContinentId { get; set; }
 
-    [Display(Name = "CountrySubcontinentId")]
-    public Guid SubcontinentId { get; set; }
+    [DisabledInput]
+    [Display(Name = "CountinentName")]
+    public String ContinentName { get; set; }
+
+    //[DisabledInput]
+    //[Display(Name = "CountrySubcontinentId")]
+    //[SelectItems(nameof(EditModalModel.CountrySubContinents))]
+    //public Guid SubcontinentId { get; set; }
+
+    [DisabledInput]
+    [Display(Name = "CountinentName")]
+    public String SubcontinentName { get; set; }
+
 
     [Display(Name = "CountryName")]
     public String Name { get; set; }
@@ -38,6 +52,7 @@ public class EditCountryViewModel
     [Display(Name = "CountryCurrency")]
     public String Currency { get; set; }
 
+    //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:N3}")]
     [Display(Name = "CountryPopulation")]
     public Int64 Population { get; set; }
 
@@ -47,6 +62,7 @@ public class EditCountryViewModel
     [Display(Name = "CountryEmojiU")]
     public String EmojiU { get; set; }
 
+    [TextArea]
     [Display(Name = "CountryRemarks")]
     public String Remarks { get; set; }
 }

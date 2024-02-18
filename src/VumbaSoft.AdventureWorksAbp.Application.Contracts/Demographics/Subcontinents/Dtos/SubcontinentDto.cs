@@ -12,6 +12,8 @@ public class SubcontinentDto : FullAuditedEntityDto<Guid>
 
     public Guid ContinentId { get; set; }
 
+    public string ContinentName { get; set; }
+
     public Int64 Population { get; set; }
 
     public String Remarks { get; set; }

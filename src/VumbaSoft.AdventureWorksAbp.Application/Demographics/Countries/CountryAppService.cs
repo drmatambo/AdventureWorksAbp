@@ -1,9 +1,17 @@
 using System;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using VumbaSoft.AdventureWorksAbp.Permissions;
 using VumbaSoft.AdventureWorksAbp.Demographics.Countries.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Application.Dtos;
+using VumbaSoft.AdventureWorksAbp.Demographics.Subcontinents.Dtos;
+using VumbaSoft.AdventureWorksAbp.Demographics.Continents;
+using VumbaSoft.AdventureWorksAbp.Demographics.Subcontinents;
+using System.Collections.Generic;
+using Volo.Abp.ObjectMapping;
+using Volo.Abp.Domain.Entities;
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.Countries;
 
@@ -17,11 +25,16 @@ public class CountryAppService : CrudAppService<Country, CountryDto, Guid, Count
     protected override string UpdatePolicyName { get; set; } = AdventureWorksAbpPermissions.Country.Update;
     protected override string DeletePolicyName { get; set; } = AdventureWorksAbpPermissions.Country.Delete;
 
-    private readonly ICountryRepository _repository;
+    private readonly ICountryRepository _countryRepository;
+    private readonly ISubcontinentRepository _subContinentRepository;
+    private readonly IContinentRepository _continentRepository;
 
-    public CountryAppService(ICountryRepository repository) : base(repository)
+
+    public CountryAppService(ICountryRepository countryRepository, ISubcontinentRepository subContinentRepository, IContinentRepository continentRepository) : base(countryRepository)
     {
-        _repository = repository;
+        _countryRepository = countryRepository;
+        _subContinentRepository = subContinentRepository;
+        _continentRepository = continentRepository;
     }
 
     protected override async Task<IQueryable<Country>> CreateFilteredQueryAsync(CountryGetListInput input)
@@ -44,5 +57,111 @@ public class CountryAppService : CrudAppService<Country, CountryDto, Guid, Count
             .WhereIf(input.EmojiU != null, x => x.EmojiU == input.EmojiU)
             .WhereIf(input.Remarks != null, x => x.Remarks == input.Remarks)
             ;
+    }
+
+    public async Task<ListResultDto<CountrySubcontinentLookUpDto>> GetSubContinentLookupAsync()
+    {
+        var subContinents = await _subContinentRepository.GetListAsync();
+        return new ListResultDto<CountrySubcontinentLookUpDto>(ObjectMapper.Map<List<Subcontinent>, List<CountrySubcontinentLookUpDto>>(subContinents));
+    }
+
+    public async Task<ListResultDto<CountryContinentLookUpDto>> GetContinentLookupAsync()
+    {
+        var continents = await _continentRepository.GetListAsync();
+        return new ListResultDto<CountryContinentLookUpDto>(ObjectMapper.Map<List<Continent>, List<CountryContinentLookUpDto>>(continents));
+    }
+
+    public override async Task<CountryDto> GetAsync(Guid id)
+    {
+        //Get the IQueryable<Continent> from the base Continent repository
+        var queryable = await Repository.GetQueryableAsync();
+
+        //Prepare a query to join Subcontinents and Continents
+        var query = from country in queryable
+                    join subcontinent in await _subContinentRepository.GetQueryableAsync() on country.SubcontinentId equals subcontinent.Id
+                    join continent in await _continentRepository.GetQueryableAsync() on country.ContinentId equals continent.Id
+                    where country.Id == id
+                    select new { country, subcontinent, continent };
+
+        //Execute the query and get the continents with subcontinents
+        var queryResult = await AsyncExecuter.FirstOrDefaultAsync(query);
+
+        if (queryResult == null)
+        {
+            throw new EntityNotFoundException(typeof(Country), id);
+        }
+
+        var countryDto = ObjectMapper.Map<Country, CountryDto>(queryResult.country);
+
+        countryDto.ContinentName = queryResult.continent.Name;
+        countryDto.SubcontinentName = queryResult.subcontinent.Name;
+        //TODO: Pending implementacion of master details
+        countryDto.Regions = new();
+
+        return countryDto;
+    }
+
+    public override async Task<PagedResultDto<CountryDto>> GetListAsync(CountryGetListInput input)
+    {
+        //Get the IQueryable<Continent> from the base Continent repository
+        var queryable = await Repository.GetQueryableAsync();
+
+        //Prepare a query to join Subcontinents and Continents
+        var query = from country in queryable
+                    join subcontinent in await _subContinentRepository.GetQueryableAsync() on country.SubcontinentId equals subcontinent.Id
+                    join continent in await _continentRepository.GetQueryableAsync() on country.ContinentId equals continent.Id
+                    select new { country, subcontinent, continent };
+
+
+        query = query.OrderBy(NormalizeSorting(input.Sorting))
+            .Skip(input.SkipCount)
+            .Take(input.MaxResultCount);
+
+
+        //Execute the query and get the ountry with continents, subcontinents
+        var queryResult = await AsyncExecuter.ToListAsync(query);
+
+        //Convert the query result to a list of subcontinentDto objects
+        var countryDtos = queryResult.Select(x =>
+        {
+            var countryDto = ObjectMapper.Map<Country, CountryDto>(x.country);
+            countryDto.ContinentName = x.continent.Name;
+            countryDto.SubcontinentName = x.subcontinent.Name;
+            return countryDto;
+        }).ToList();
+
+
+        //Get the total count with another query
+        var totalCount = await Repository.GetCountAsync();
+
+        return new PagedResultDto<CountryDto>(totalCount, countryDtos);
+    }
+
+    private static string NormalizeSorting(string sorting)
+    {
+        if (sorting.IsNullOrEmpty())
+        {
+            return $"country.{nameof(Country.Name)}";
+        }
+
+        if (sorting.Contains("continentName", StringComparison.OrdinalIgnoreCase))
+        {
+            return sorting.Replace(
+                "continentName",
+                "continent.Name",
+                StringComparison.OrdinalIgnoreCase
+            );
+        }
+
+        if (sorting.Contains("subcontinentName", StringComparison.OrdinalIgnoreCase))
+        {
+            return sorting.Replace(
+                "subcontinentName",
+                "subcontinent.Name",
+                StringComparison.OrdinalIgnoreCase
+            );
+        }
+
+        return $"country.{sorting}";
     }
 }

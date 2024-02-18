@@ -1,13 +1,16 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
 
 namespace VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.Countries.Country.ViewModels;
 
 public class CreateCountryViewModel
 {
+    [SelectItems(nameof(CreateModalModel.CountryContinents))]
     [Display(Name = "CountryContinentId")]
     public Guid ContinentId { get; set; }
 
+    [SelectItems(nameof(CreateModalModel.CountrySubContinents))]
     [Display(Name = "CountrySubcontinentId")]
     public Guid SubcontinentId { get; set; }
 
@@ -38,6 +41,7 @@ public class CreateCountryViewModel
     [Display(Name = "CountryCurrency")]
     public String Currency { get; set; }
 
+    //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:N3}")]
     [Display(Name = "CountryPopulation")]
     public Int64 Population { get; set; }
 
@@ -48,5 +52,7 @@ public class CreateCountryViewModel
     public String EmojiU { get; set; }
 
     [Display(Name = "CountryRemarks")]
+    [TextArea]
     public String Remarks { get; set; }
+    
 }

@@ -32,7 +32,7 @@ $(function () {
         searching: false,//disable default searchbox
         autoWidth: false,
         scrollCollapse: true,
-        order: [[0, "asc"]],
+        order: [[3, "asc"]],
         ajax: abp.libs.datatables.createAjax(service.getList,getFilter),
         columnDefs: [
             {
@@ -64,12 +64,12 @@ $(function () {
                 }
             },
             {
-                title: l('StateProvinceCountryId'),
-                data: "countryId"
+                title: l('StateProvinceCountryName'),
+                data: "countryName"
             },
             {
-                title: l('StateProvinceRegionId'),
-                data: "regionId"
+                title: l('StateProvinceRegionName'),
+                data: "regionName"
             },
             {
                 title: l('StateProvinceName'),

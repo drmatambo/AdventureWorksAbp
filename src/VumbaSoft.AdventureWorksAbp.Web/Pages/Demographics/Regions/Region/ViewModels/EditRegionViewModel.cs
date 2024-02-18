@@ -1,25 +1,33 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
 
 namespace VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.Regions.Region.ViewModels;
 
 public class EditRegionViewModel
 {
-    [Display(Name = "RegionName")]
+    //[DisabledInput]
+    //[Display(Name = "Region Country Id")]
+    //[SelectItems(nameof(EditModalModel.RegionCountries))]
+    //public Guid CountryId { get; set; }
+
+    [DisabledInput]
+    [Display(Name = "Region Country Name")]
+    public String RegionCountryName { get; set; }
+
+    [Display(Name = "Region Name")]
     public String Name { get; set; }
 
-    [Display(Name = "RegionPopulation")]
+    [Display(Name = "Region Population")]
     public Int64 Population { get; set; }
 
-    [Display(Name = "RegionCountryId")]
-    public Guid CountryId { get; set; }
-
-    [Display(Name = "RegionCountryCode")]
+    [Display(Name = "Region Country Code")]
     public String CountryCode { get; set; }
 
-    [Display(Name = "RegionRegionCode")]
+    [Display(Name = "Region Region Code")]
     public String RegionCode { get; set; }
 
-    [Display(Name = "RegionRemarks")]
+    [TextArea]
+    [Display(Name = "Region Remarks")]
     public String Remarks { get; set; }
 }

@@ -10,7 +10,11 @@ public class DistrictCityDto : FullAuditedEntityDto<Guid>
 {
     public Guid CountryId { get; set; }
 
+    public String CountryName { get; set; }
+
     public Guid StateProvinceId { get; set; }
+
+    public String StateProvinceName { get; set; }
 
     public String Name { get; set; }
 

@@ -32,7 +32,7 @@ $(function () {
         searching: false,//disable default searchbox
         autoWidth: false,
         scrollCollapse: true,
-        order: [[0, "asc"]],
+        order: [[7, "asc"]],
         ajax: abp.libs.datatables.createAjax(service.getList,getFilter),
         columnDefs: [
             {
@@ -64,28 +64,28 @@ $(function () {
                 }
             },
             {
-                title: l('LocalityContinentId'),
-                data: "continentId"
+                title: l('LocalityContinentName'),
+                data: "continentName"
             },
             {
-                title: l('LocalitySubcontinentId'),
-                data: "subcontinentId"
+                title: l('LocalitySubcontinentName'),
+                data: "subcontinentName"
             },
             {
-                title: l('LocalityCountryId'),
-                data: "countryId"
+                title: l('LocalityCountryName'),
+                data: "countryName"
             },
             {
-                title: l('LocalityRegionId'),
-                data: "regionId"
+                title: l('LocalityRegionName'),
+                data: "regionName"
             },
             {
-                title: l('LocalityStateProvinceId'),
-                data: "stateProvinceId"
+                title: l('LocalityStateProvinceName'),
+                data: "stateProvinceName"
             },
             {
-                title: l('LocalityDistrictCityId'),
-                data: "districtCityId"
+                title: l('LocalityDistrictCityName'),
+                data: "districtCityName"
             },
             {
                 title: l('LocalityName'),

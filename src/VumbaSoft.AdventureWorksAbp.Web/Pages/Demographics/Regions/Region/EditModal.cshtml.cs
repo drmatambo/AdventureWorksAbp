@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using VumbaSoft.AdventureWorksAbp.Demographics.Regions;
 using VumbaSoft.AdventureWorksAbp.Demographics.Regions.Dtos;
 using VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.Regions.Region.ViewModels;
@@ -15,6 +18,7 @@ public class EditModalModel : AdventureWorksAbpPageModel
 
     [BindProperty]
     public EditRegionViewModel ViewModel { get; set; }
+    //public List<SelectListItem> RegionCountries { get; set; }
 
     private readonly IRegionAppService _service;
 
@@ -25,6 +29,12 @@ public class EditModalModel : AdventureWorksAbpPageModel
 
     public virtual async Task OnGetAsync()
     {
+        //var CountryLookUp = await _service.GetRegionCountryLookupAsync();
+        //RegionCountries = CountryLookUp.Items
+        //    .OrderBy(y => y.Name)
+        //    .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
+        //    .ToList();
+
         var dto = await _service.GetAsync(Id);
         ViewModel = ObjectMapper.Map<RegionDto, EditRegionViewModel>(dto);
     }

@@ -1,5 +1,7 @@
 using Shouldly;
+using System;
 using System.Threading.Tasks;
+using VumbaSoft.AdventureWorksAbp.Demographics.Continents;
 using Xunit;
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.Localities;
@@ -11,6 +13,11 @@ public class LocalityAppServiceTests : AdventureWorksAbpApplicationTestBase
     public LocalityAppServiceTests()
     {
         _localityAppService = GetRequiredService<ILocalityAppService>();
+    }
+
+    private T GetRequiredService<T>()
+    {
+        throw new NotImplementedException();
     }
 
     /*

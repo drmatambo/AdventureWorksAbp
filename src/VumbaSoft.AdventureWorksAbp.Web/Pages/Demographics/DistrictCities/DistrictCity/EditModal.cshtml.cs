@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using VumbaSoft.AdventureWorksAbp.Demographics.DistrictCities;
 using VumbaSoft.AdventureWorksAbp.Demographics.DistrictCities.Dtos;
 using VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.DistrictCities.DistrictCity.ViewModels;
@@ -16,6 +19,9 @@ public class EditModalModel : AdventureWorksAbpPageModel
     [BindProperty]
     public EditDistrictCityViewModel ViewModel { get; set; }
 
+    //public List<SelectListItem> Provinces { get; set; }
+    //public List<SelectListItem> Countries { get; set; }
+
     private readonly IDistrictCityAppService _service;
 
     public EditModalModel(IDistrictCityAppService service)
@@ -26,7 +32,23 @@ public class EditModalModel : AdventureWorksAbpPageModel
     public virtual async Task OnGetAsync()
     {
         var dto = await _service.GetAsync(Id);
+       
         ViewModel = ObjectMapper.Map<DistrictCityDto, EditDistrictCityViewModel>(dto);
+        
+        //ViewModel.CountryId
+        //var provinceLookUp = await _service.GetDistrictCityStateProvinceLookupAsync();
+        //Provinces = provinceLookUp.Items
+        //    .OrderBy(y => y.Name)
+        //    .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
+        //    .ToList();
+
+        //var countriesLookUp = await _service.GetDistrictCityCountryLookupAsync();
+        //Countries = countriesLookUp.Items
+        //    .OrderBy(y => y.Name)
+        //    .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
+        //    .ToList();
+
+
     }
 
     public virtual async Task<IActionResult> OnPostAsync()
