@@ -37,8 +37,8 @@ public class ContinentAppService : CrudAppService<Continent, ContinentDto, Guid,
         // TODO: AbpHelper generated
         return (await base.CreateFilteredQueryAsync(input))
             .WhereIf(input.Name != null, x => x.Name.Contains(input.Name))
-            .WhereIf(input.Population != null, x => x.Population == input.Population)
-            .WhereIf(input.Remarks != null, x => x.Remarks == input.Remarks)
+            .WhereIf(input.Population != null, x => x.Population.ToString().Contains(input.Population.ToString()))
+            .WhereIf(input.Remarks != null, x => x.Remarks.Contains(input.Remarks))
             ;
     }
 

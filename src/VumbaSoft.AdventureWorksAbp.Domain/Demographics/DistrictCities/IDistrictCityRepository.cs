@@ -30,4 +30,6 @@ public interface IDistrictCityRepository : IRepository<DistrictCity, Guid>
         bool includeDetails = false,
         CancellationToken cancellationToken = default
     );
+
+    Task<int> GetTotalCountAsync(DistrictCityFilter filter);
 }

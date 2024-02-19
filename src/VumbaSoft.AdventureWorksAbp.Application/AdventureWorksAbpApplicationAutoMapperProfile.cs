@@ -45,8 +45,16 @@ public class AdventureWorksAbpApplicationAutoMapperProfile : Profile
         CreateMap<CreateLocalityDto, Locality>(MemberList.Source);
         CreateMap<UpdateLocalityDto, Locality>(MemberList.Source);
 
+        //Filter Mapping
+        CreateMap<SubcontinentGetListInput, SubcontinentFilter>();
+        CreateMap<CountryGetListInput, CountryFilter>();
+        CreateMap<RegionGetListInput, RegionFilter>();
+        CreateMap<StateProvinceGetListInput, StateProvinceFilter>();
+        CreateMap<DistrictCityGetListInput, DistrictCityFilter>();
+        CreateMap<LocalityGetListInput, LocalityFilter>();
+
+
         //Configure Mapping of Continente LookUp
-        //Subcontinente
         CreateMap<Continent, ContinentLookUpDto>();
         CreateMap<Subcontinent, SubcontinentLookUpDto>();
 

@@ -61,6 +61,21 @@ public class StateProvinceRepository : EfCoreRepository<AdventureWorksAbpDbConte
             .ToListAsync(GetCancellationToken(cancellationToken));
     }
 
+    public async Task<int> GetTotalCountAsync(StateProvinceFilter filter)
+    {
+        var dbSet = await GetDbSetAsync();
+
+        return (await dbSet
+                    .WhereIf(filter.CountryId != null, x => x.CountryId.ToString().Contains(filter.CountryId.ToString()))
+                    .WhereIf(filter.RegionId != null, x => x.RegionId.ToString().Contains(filter.RegionId.ToString()))
+                    .WhereIf(filter.Name != null, x => x.Name.Contains(filter.Name))
+                    .WhereIf(filter.Population != null, x => x.Population.ToString().Contains(filter.Population.ToString()))
+                    .WhereIf(filter.RegionCode != null, x => x.RegionCode.Contains(filter.RegionCode))
+                    .WhereIf(filter.StateProvinceCode != null, x => x.StateProvinceCode.Contains(filter.StateProvinceCode))
+                    .WhereIf(filter.Remarks != null, x => x.Remarks.Contains(filter.Remarks)).ToListAsync()
+                ).Count;
+    }
+
     public override async Task<IQueryable<StateProvince>> WithDetailsAsync()
     {
         return (await GetQueryableAsync()).IncludeDetails();

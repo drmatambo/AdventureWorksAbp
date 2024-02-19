@@ -43,6 +43,27 @@ public class LocalityRepository : EfCoreRepository<AdventureWorksAbpDbContext, L
             .ToListAsync(GetCancellationToken(cancellationToken));
     }
 
+    public async Task<int> GetTotalCountAsync(LocalityFilter filter)
+    {
+        var dbSet = await GetDbSetAsync();
+
+        return (await dbSet
+                    .WhereIf(filter.ContinentId != null, x => x.ContinentId.ToString().Contains(filter.ContinentId.ToString()))
+                    .WhereIf(filter.SubcontinentId != null, x => x.SubcontinentId.ToString().Contains(filter.SubcontinentId.ToString()))
+                    .WhereIf(filter.CountryId != null, x => x.CountryId.ToString().Contains(filter.CountryId.ToString()))
+                    .WhereIf(filter.RegionId != null, x => x.RegionId.ToString().Contains(filter.RegionId.ToString()))
+                    .WhereIf(filter.StateProvinceId != null, x => x.StateProvinceId.ToString().Contains(filter.StateProvinceId.ToString()))
+                    .WhereIf(filter.DistrictCityId != null, x => x.DistrictCityId.ToString().Contains(filter.DistrictCityId.ToString()))
+                    .WhereIf(filter.Name != null, x => x.Name.Contains(filter.Name))
+                    .WhereIf(filter.Population != null, x => x.Population.ToString().Contains(filter.Population.ToString()))
+                    .WhereIf(filter.DistrictCityCode != null, x => x.DistrictCityCode.Contains(filter.DistrictCityCode))
+                    .WhereIf(filter.LocalityCode != null, x => x.LocalityCode == filter.LocalityCode)
+                    .WhereIf(filter.Latitude != null, x => x.Latitude.ToString().Contains(filter.Latitude.ToString()))
+                    .WhereIf(filter.Longitude != null, x => x.Longitude.ToString().Contains(filter.Longitude.ToString()))
+                    .WhereIf(filter.Remarks != null, x => x.Remarks.Contains(filter.Remarks)).ToListAsync()
+               ).Count;
+    }
+
     public override async Task<IQueryable<Locality>> WithDetailsAsync()
     {
         return (await GetQueryableAsync()).IncludeDetails();

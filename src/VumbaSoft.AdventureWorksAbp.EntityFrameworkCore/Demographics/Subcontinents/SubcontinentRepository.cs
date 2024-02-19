@@ -26,7 +26,13 @@ public class SubcontinentRepository : EfCoreRepository<AdventureWorksAbpDbContex
             .FirstOrDefaultAsync(subContinent => subContinent.Name == name, GetCancellationToken(cancellationToken));
     }
 
-    public async Task<List<Subcontinent>> GetListAsync(int skipCount, int maxResultCount, string sorting, string filter = null, bool includeDetails = false, CancellationToken cancellationToken = default)
+    public async Task<List<Subcontinent>> GetListAsync(
+        int skipCount, 
+        int maxResultCount, 
+        string sorting,
+        string filter = null, 
+        bool includeDetails = false, 
+        CancellationToken cancellationToken = default)
     {
         var dbSet = await GetDbSetAsync();
 
@@ -36,6 +42,46 @@ public class SubcontinentRepository : EfCoreRepository<AdventureWorksAbpDbContex
             .Skip(skipCount)
             .Take(maxResultCount)
             .ToListAsync(GetCancellationToken(cancellationToken));
+    }
+
+    //public async Task<List<Subcontinent>> GetListAsync(
+    //    int skipCount, 
+    //    int maxResultCount, 
+    //    string sorting = "Name", 
+    //    SubcontinentFilter? filter = null)
+    //{
+    //    var dbSet = await GetDbSetAsync();
+
+    //    return await dbSet
+    //        .WhereIf(!filter.Name.IsNullOrWhiteSpace(), subContinent => subContinent.Name.Contains(filter.Name))
+    //        .WhereIf(!filter.ContinentId.ToString().IsNullOrWhiteSpace(), subContinent => subContinent.ContinentId.ToString().Contains(filter.ContinentId.ToString()))
+    //        .WhereIf(!filter.Population.ToString().IsNullOrWhiteSpace(), subContinent => subContinent.Population.ToString().Contains(filter.Population.ToString()))
+    //        .WhereIf(!filter.Remarks.IsNullOrWhiteSpace(), subContinent => subContinent.Remarks.Contains(filter.Remarks))
+    //        .OrderBy(sorting)
+    //        .Skip(skipCount)
+    //        .Take(maxResultCount)
+    //        .ToListAsync();
+    //}
+
+    public async Task<int> GetTotalCountAsync(SubcontinentFilter filter)
+    {
+        var dbSet = await GetDbSetAsync();
+
+        //var subContinents = await dbSet
+        //    .WhereIf(!filter.Name.IsNullOrWhiteSpace(), subContinent => subContinent.Name.Contains(filter.Name))
+        //    .WhereIf(!filter.ContinentId.ToString().IsNullOrWhiteSpace(), subContinent => subContinent.ContinentId.ToString().Contains(filter.ContinentId.ToString()))
+        //    .WhereIf(!filter.Population.ToString().IsNullOrWhiteSpace(), subContinent => subContinent.Population.ToString().Contains(filter.Population.ToString()))
+        //    .WhereIf(!filter.Remarks.IsNullOrWhiteSpace(), subContinent => subContinent.Remarks.Contains(filter.Remarks)).ToListAsync();
+
+
+        return (await dbSet
+            .WhereIf(!filter.Name.IsNullOrWhiteSpace(), subContinent => subContinent.Name.Contains(filter.Name))
+            .WhereIf(!filter.ContinentId.ToString().IsNullOrWhiteSpace(), subContinent => subContinent.ContinentId.ToString().Contains(filter.ContinentId.ToString()))
+            .WhereIf(!filter.Population.ToString().IsNullOrWhiteSpace(), subContinent => subContinent.Population.ToString().Contains(filter.Population.ToString()))
+            .WhereIf(!filter.Remarks.IsNullOrWhiteSpace(), subContinent => subContinent.Remarks.Contains(filter.Remarks))
+            .ToListAsync()).Count;
+
+        //return subContinents.Count;
     }
 
     public override async Task<IQueryable<Subcontinent>> WithDetailsAsync()

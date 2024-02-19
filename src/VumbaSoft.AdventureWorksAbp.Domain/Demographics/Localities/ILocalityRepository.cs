@@ -20,4 +20,6 @@ public interface ILocalityRepository : IRepository<Locality, Guid>
         bool includeDetails = false,
         CancellationToken cancellationToken = default
     );
+
+    Task<int> GetTotalCountAsync(LocalityFilter filter);
 }

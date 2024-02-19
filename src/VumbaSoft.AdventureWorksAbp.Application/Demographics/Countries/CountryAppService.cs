@@ -12,6 +12,7 @@ using VumbaSoft.AdventureWorksAbp.Demographics.Subcontinents;
 using System.Collections.Generic;
 using Volo.Abp.ObjectMapping;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Domain.Repositories;
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.Countries;
 
@@ -59,17 +60,6 @@ public class CountryAppService : CrudAppService<Country, CountryDto, Guid, Count
             ;
     }
 
-    public async Task<ListResultDto<CountrySubcontinentLookUpDto>> GetSubContinentLookupAsync()
-    {
-        var subContinents = await _subContinentRepository.GetListAsync();
-        return new ListResultDto<CountrySubcontinentLookUpDto>(ObjectMapper.Map<List<Subcontinent>, List<CountrySubcontinentLookUpDto>>(subContinents));
-    }
-
-    public async Task<ListResultDto<CountryContinentLookUpDto>> GetContinentLookupAsync()
-    {
-        var continents = await _continentRepository.GetListAsync();
-        return new ListResultDto<CountryContinentLookUpDto>(ObjectMapper.Map<List<Continent>, List<CountryContinentLookUpDto>>(continents));
-    }
 
     public override async Task<CountryDto> GetAsync(Guid id)
     {
@@ -103,8 +93,13 @@ public class CountryAppService : CrudAppService<Country, CountryDto, Guid, Count
 
     public override async Task<PagedResultDto<CountryDto>> GetListAsync(CountryGetListInput input)
     {
+
+
         //Get the IQueryable<Continent> from the base Continent repository
         var queryable = await Repository.GetQueryableAsync();
+
+        //Create Mapping for Filter
+        var filter = ObjectMapper.Map<CountryGetListInput, CountryFilter>(input);
 
         //Prepare a query to join Subcontinents and Continents
         var query = from country in queryable
@@ -112,8 +107,24 @@ public class CountryAppService : CrudAppService<Country, CountryDto, Guid, Count
                     join continent in await _continentRepository.GetQueryableAsync() on country.ContinentId equals continent.Id
                     select new { country, subcontinent, continent };
 
-
-        query = query.OrderBy(NormalizeSorting(input.Sorting))
+        //
+        query = query
+            .WhereIf(input.ContinentId != null, x => x.country.ContinentId.ToString().Contains(input.ContinentId.ToString()))
+            .WhereIf(input.SubcontinentId != null, x => x.country.SubcontinentId.ToString().Contains(input.SubcontinentId.ToString()))
+            .WhereIf(input.Name != null, x => x.country.Name.Contains(input.Name))
+            .WhereIf(input.FormalName != null, x => x.country.FormalName.Contains(input.FormalName))
+            .WhereIf(input.NativeName != null, x => x.country.NativeName.Contains(input.NativeName))
+            .WhereIf(input.IsoTreeCode != null, x => x.country.IsoTreeCode.Contains(input.IsoTreeCode))
+            .WhereIf(input.IsoTwoCode != null, x => x.country.IsoTwoCode.Contains(input.IsoTwoCode))
+            .WhereIf(input.CcnTreeCode != null, x => x.country.CcnTreeCode.Contains(input.CcnTreeCode))
+            .WhereIf(input.PhoneCode != null, x => x.country.PhoneCode.Contains(input.PhoneCode))
+            .WhereIf(input.Capital != null, x => x.country.Capital.Contains(input.Capital))
+            .WhereIf(input.Currency != null, x => x.country.Currency.Contains(input.Currency))
+            .WhereIf(input.Population != null, x => x.country.Population.ToString().Contains(input.Population.ToString()))
+            .WhereIf(input.Emoji != null, x => x.country.Emoji.Contains(input.Emoji))
+            .WhereIf(input.EmojiU != null, x => x.country.EmojiU.Contains(input.EmojiU))
+            .WhereIf(input.Remarks != null, x => x.country.Remarks.Contains(input.Remarks))
+            .OrderBy(NormalizeSorting(input.Sorting))
             .Skip(input.SkipCount)
             .Take(input.MaxResultCount);
 
@@ -132,9 +143,25 @@ public class CountryAppService : CrudAppService<Country, CountryDto, Guid, Count
 
 
         //Get the total count with another query
-        var totalCount = await Repository.GetCountAsync();
+        //var totalCount = await Repository.GetCountAsync();
+
+        var totalCount = await _countryRepository.GetTotalCountAsync(filter);
+
+        //var totalCount = await Repository.CountAsync(x => x.Name.Contains(input.Name));
 
         return new PagedResultDto<CountryDto>(totalCount, countryDtos);
+    }
+
+    public async Task<ListResultDto<CountrySubcontinentLookUpDto>> GetSubContinentLookupAsync()
+    {
+        var subContinents = await _subContinentRepository.GetListAsync();
+        return new ListResultDto<CountrySubcontinentLookUpDto>(ObjectMapper.Map<List<Subcontinent>, List<CountrySubcontinentLookUpDto>>(subContinents));
+    }
+
+    public async Task<ListResultDto<CountryContinentLookUpDto>> GetContinentLookupAsync()
+    {
+        var continents = await _continentRepository.GetListAsync();
+        return new ListResultDto<CountryContinentLookUpDto>(ObjectMapper.Map<List<Continent>, List<CountryContinentLookUpDto>>(continents));
     }
 
     private static string NormalizeSorting(string sorting)

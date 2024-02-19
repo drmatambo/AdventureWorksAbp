@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using Volo.Abp.Application.Dtos;
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.Subcontinents.Dtos;

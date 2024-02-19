@@ -20,4 +20,6 @@ public interface IRegionRepository : IRepository<Region, Guid>
         bool includeDetails = false,
         CancellationToken cancellationToken = default
     );
+
+    Task<int> GetTotalCountAsync(RegionFilter filter);
 }

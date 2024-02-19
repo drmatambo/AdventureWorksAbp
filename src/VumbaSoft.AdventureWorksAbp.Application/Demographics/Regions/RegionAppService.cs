@@ -95,12 +95,21 @@ public class RegionAppService : CrudAppService<Region, RegionDto, Guid, RegionGe
         //Get the IQueryable<Continent> from the base Continent repository
         var queryable = await Repository.GetQueryableAsync();
 
+        var filter = ObjectMapper.Map<RegionGetListInput, RegionFilter>(input);
+
         //Prepare a query to join Subcontinents and Continents
         var query = from region in queryable
                     join country in await _countryRepository.GetQueryableAsync() on region.CountryId equals country.Id
                     select new {region, country};
 
-        query = query.OrderBy(NormalizeSorting(input.Sorting))
+        query = query
+            .WhereIf(input.Name != null, x => x.region.Name.Contains(input.Name))
+            .WhereIf(input.Population != null, x => x.region.Population.ToString().Contains(input.Population.ToString()))
+            .WhereIf(input.CountryId != null, x => x.region.CountryId.ToString().Contains(input.CountryId.ToString()))
+            .WhereIf(input.CountryCode != null, x => x.region.CountryCode.Contains(input.CountryCode))
+            .WhereIf(input.RegionCode != null, x => x.region.RegionCode.Contains(input.RegionCode))
+            .WhereIf(input.Remarks != null, x => x.region.Remarks.Contains(input.Remarks))
+            .OrderBy(NormalizeSorting(input.Sorting))
             .Skip(input.SkipCount)
             .Take(input.MaxResultCount);
 
@@ -124,7 +133,9 @@ public class RegionAppService : CrudAppService<Region, RegionDto, Guid, RegionGe
 
 
         //Get the total count with another query
-        var totalCount = await Repository.GetCountAsync();
+        //var totalCount = await Repository.GetCountAsync();
+
+        var totalCount = await _regionRepository.GetTotalCountAsync(filter);
 
         return new PagedResultDto<RegionDto>(totalCount, regionDtos);
     }

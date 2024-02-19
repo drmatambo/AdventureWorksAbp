@@ -43,6 +43,21 @@ public class RegionRepository : EfCoreRepository<AdventureWorksAbpDbContext, Reg
             .ToListAsync(GetCancellationToken(cancellationToken));
     }
 
+    public async Task<int> GetTotalCountAsync(RegionFilter filter)
+    {
+        var dbSet = await GetDbSetAsync();
+
+        return (await dbSet
+                    .WhereIf(filter.Name != null, x => x.Name.Contains(filter.Name))
+                    .WhereIf(filter.Population != null, x => x.Population.ToString().Contains(filter.Population.ToString()))
+                    .WhereIf(filter.CountryId != null, x => x.CountryId.ToString().Contains(filter.CountryId.ToString()))
+                    .WhereIf(filter.CountryCode != null, x => x.CountryCode.Contains(filter.CountryCode))
+                    .WhereIf(filter.RegionCode != null, x => x.RegionCode.Contains(filter.RegionCode))
+                    .WhereIf(filter.Remarks != null, x => x.Remarks.Contains(filter.Remarks)).ToListAsync()
+               ).Count;
+        throw new NotImplementedException();
+    }
+
     public override async Task<IQueryable<Region>> WithDetailsAsync()
     {
         return (await GetQueryableAsync()).IncludeDetails();

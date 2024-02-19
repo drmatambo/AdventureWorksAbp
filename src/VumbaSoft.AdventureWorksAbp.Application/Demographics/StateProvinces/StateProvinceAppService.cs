@@ -81,6 +81,8 @@ public class StateProvinceAppService : CrudAppService<StateProvince, StateProvin
         //Get the IQueryable<Continent> from the base Continent repository
         var queryable = await Repository.GetQueryableAsync();
 
+        var filter = ObjectMapper.Map<StateProvinceGetListInput, StateProvinceFilter>(input);
+
         //Prepare a query to join Subcontinents and Continents
         var query = from stateProvince in queryable
                     join region in await _rerionRepository.GetQueryableAsync() on stateProvince.RegionId equals region.Id
@@ -88,7 +90,15 @@ public class StateProvinceAppService : CrudAppService<StateProvince, StateProvin
                     //where stateProvince.Id == id
                     select new { stateProvince, region, country };
 
-        query = query.OrderBy(NormalizeSorting(input.Sorting))
+        query = query
+            .WhereIf(input.CountryId != null, x => x.stateProvince.CountryId.ToString().Contains(input.CountryId.ToString()))
+            .WhereIf(input.RegionId != null, x => x.stateProvince.RegionId.ToString().Contains(input.RegionId.ToString()))
+            .WhereIf(input.Name != null, x => x.stateProvince.Name.Contains(input.Name))
+            .WhereIf(input.Population != null, x => x.stateProvince.Population.ToString().Contains(input.Population.ToString()))
+            .WhereIf(input.RegionCode != null, x => x.stateProvince.RegionCode.Contains(input.RegionCode))
+            .WhereIf(input.StateProvinceCode != null, x => x.stateProvince.StateProvinceCode.Contains(input.StateProvinceCode))
+            .WhereIf(input.Remarks != null, x => x.stateProvince.Remarks.Contains(input.Remarks))
+            .OrderBy(NormalizeSorting(input.Sorting))
             .Skip(input.SkipCount)
             .Take(input.MaxResultCount);
 
@@ -104,7 +114,8 @@ public class StateProvinceAppService : CrudAppService<StateProvince, StateProvin
             return stateProvinceDto;
         }).ToList();
 
-        var totalCount = await Repository.GetCountAsync();
+        //var totalCount = await Repository.GetCountAsync();
+        var totalCount = await _stateProvinceRepository.GetTotalCountAsync(filter);
 
         return new PagedResultDto<StateProvinceDto>(totalCount, stateProvinceDtos);
     }

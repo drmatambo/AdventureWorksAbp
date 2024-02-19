@@ -20,4 +20,13 @@ public interface ISubcontinentRepository : IRepository<Subcontinent, Guid>
         bool includeDetails = false,
         CancellationToken cancellationToken = default
     );
+
+    //Task<List<Subcontinent>> GetListAsync(
+    //    int skipCount,
+    //    int maxResultCount,
+    //    string sorting = "Name",
+    //    SubcontinentFilter? filter = null
+    //);
+
+    Task<int> GetTotalCountAsync(SubcontinentFilter filter);
 }

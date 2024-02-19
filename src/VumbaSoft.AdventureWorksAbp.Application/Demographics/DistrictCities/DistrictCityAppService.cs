@@ -85,19 +85,32 @@ public class DistrictCityAppService : CrudAppService<DistrictCity, DistrictCityD
         //Get the IQueryable<Continent> from the base Continent repository
         var queryable = await Repository.GetQueryableAsync();
 
+        var filter = ObjectMapper.Map<DistrictCityGetListInput, DistrictCityFilter>(input);
+
         //Prepare a query to join Subcontinents and Continents
         var query = from districtCity in queryable
                     join stateProvince in await _stateProvinceRepository.GetQueryableAsync() on districtCity.StateProvinceId equals stateProvince.Id
                     join country in await _countryRepository.GetQueryableAsync() on districtCity.CountryId equals country.Id
-                    //where districtCity.Id == id
                     select new { districtCity, stateProvince, country };
 
-        query = query.OrderBy(NormalizeSorting(input.Sorting))
+        query = query
+            .WhereIf(input.CountryId != null, x => x.districtCity.CountryId.ToString().Contains(input.CountryId.ToString()))
+            .WhereIf(input.StateProvinceId != null, x => x.districtCity.StateProvinceId.ToString().Contains(input.StateProvinceId.ToString()))
+            .WhereIf(input.Name != null, x => x.districtCity.Name.Contains(input.Name))
+            .WhereIf(input.Population != null, x => x.districtCity.Population.ToString().Contains(input.Population.ToString()))
+            .WhereIf(input.StateProvinceCode != null, x => x.districtCity.StateProvinceCode == input.StateProvinceCode)
+            .WhereIf(input.CountryCode != null, x => x.districtCity.CountryCode.Contains(input.CountryCode))
+            .WhereIf(input.Latitude != null, x => x.districtCity.Latitude.ToString().Contains(input.Latitude.ToString()))
+            .WhereIf(input.Longitude != null, x => x.districtCity.Longitude.ToString().Contains(input.Longitude.ToString()))
+            .WhereIf(input.Remarks != null, x => x.districtCity.Remarks.Contains(input.Remarks))
+            .OrderBy(NormalizeSorting(input.Sorting))
             .Skip(input.SkipCount)
             .Take(input.MaxResultCount);
 
         //Execute the query and get the continents with subcontinents
         var queryResult = await AsyncExecuter.ToListAsync(query);
+
+        //var queryResult = await _districtCityRepository.GetTotalCountAsync(filter);
 
         var districtCityDtos = queryResult.Select(x =>
         {
@@ -108,7 +121,7 @@ public class DistrictCityAppService : CrudAppService<DistrictCity, DistrictCityD
             return districtCityDto;
         }).ToList();
 
-        var totalCount = await Repository.GetCountAsync();
+        var totalCount = await _districtCityRepository.GetTotalCountAsync(filter);
 
         return new PagedResultDto<DistrictCityDto>(totalCount, districtCityDtos);
     }

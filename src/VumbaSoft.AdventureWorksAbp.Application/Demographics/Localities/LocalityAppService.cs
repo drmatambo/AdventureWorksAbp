@@ -16,6 +16,7 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Entities;
 using System.Collections.Generic;
 using Volo.Abp.ObjectMapping;
+using Volo.Abp.TextTemplating.VirtualFiles;
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.Localities;
 
@@ -116,6 +117,8 @@ public class LocalityAppService : CrudAppService<Locality, LocalityDto, Guid, Lo
         //Get the IQueryable<Continent> from the base Continent repository
         var queryable = await Repository.GetQueryableAsync();
 
+        var filter = ObjectMapper.Map<LocalityGetListInput, LocalityFilter>(input);
+
         //Prepare a query to join Subcontinents and Continents
         var query = from locality in queryable
                     join districtCity in await _districtCityRepository.GetQueryableAsync() on locality.DistrictCityId equals districtCity.Id
@@ -126,8 +129,22 @@ public class LocalityAppService : CrudAppService<Locality, LocalityDto, Guid, Lo
                     join continent in await _continentRepository.GetQueryableAsync() on locality.ContinentId equals continent.Id
                     select new { locality, districtCity, stateProvince, region, country, subContinent, continent };
 
-        //OrderBy new selected fields of joined tables 
-        query = query.OrderBy(NormalizeSorting(input.Sorting))
+        //Aplay filter and OrderBy new selected fields of joined tables 
+        query = query
+            .WhereIf(input.ContinentId != null, x => x.locality.ContinentId.ToString().Contains(input.ContinentId.ToString()))
+            .WhereIf(input.SubcontinentId != null, x => x.locality.SubcontinentId.ToString().Contains(input.SubcontinentId.ToString()))
+            .WhereIf(input.CountryId != null, x => x.locality.CountryId.ToString().Contains(input.CountryId.ToString()))
+            .WhereIf(input.RegionId != null, x => x.locality.RegionId.ToString().Contains(input.RegionId.ToString()))
+            .WhereIf(input.StateProvinceId != null, x => x.locality.StateProvinceId.ToString().Contains(input.StateProvinceId.ToString()))
+            .WhereIf(input.DistrictCityId != null, x => x.locality.DistrictCityId.ToString().Contains(input.DistrictCityId.ToString()))
+            .WhereIf(input.Name != null, x => x.locality.Name.Contains(input.Name))
+            .WhereIf(input.Population != null, x => x.locality.Population.ToString().Contains(input.Population.ToString()))
+            .WhereIf(input.DistrictCityCode != null, x => x.locality.DistrictCityCode.Contains(input.DistrictCityCode))
+            .WhereIf(input.LocalityCode != null, x => x.locality.LocalityCode == input.LocalityCode)
+            .WhereIf(input.Latitude != null, x => x.locality.Latitude.ToString().Contains(input.Latitude.ToString()))
+            .WhereIf(input.Longitude != null, x => x.locality.Longitude.ToString().Contains(input.Longitude.ToString()))
+            .WhereIf(input.Remarks != null, x => x.locality.Remarks.Contains(input.Remarks))
+            .OrderBy(NormalizeSorting(input.Sorting))
             .Skip(input.SkipCount)
             .Take(input.MaxResultCount);
 
@@ -135,6 +152,7 @@ public class LocalityAppService : CrudAppService<Locality, LocalityDto, Guid, Lo
         //Execute the query and get the continents with subcontinents
         var queryResult = await AsyncExecuter.ToListAsync(query);
 
+        //Replace The Dto name with corresponding field names
         var localityDtos = queryResult.Select(x =>
         {
             var localityDto = ObjectMapper.Map<Locality, LocalityDto>(x.locality);
@@ -149,7 +167,7 @@ public class LocalityAppService : CrudAppService<Locality, LocalityDto, Guid, Lo
             return localityDto;
         }).ToList();
 
-        var totalCount = await Repository.GetCountAsync();
+        var totalCount = await _localityRepository.GetTotalCountAsync(filter);
 
         return new PagedResultDto<LocalityDto>(totalCount, localityDtos);
 

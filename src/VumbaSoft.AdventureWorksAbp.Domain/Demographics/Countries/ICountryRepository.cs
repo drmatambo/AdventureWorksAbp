@@ -20,4 +20,6 @@ public interface ICountryRepository : IRepository<Country, Guid>
         bool includeDetails = false,
         CancellationToken cancellationToken = default
     );
+
+    Task<int> GetTotalCountAsync(CountryFilter filter);
 }
