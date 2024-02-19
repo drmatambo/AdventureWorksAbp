@@ -22,7 +22,6 @@ public class ContinentAppService : CrudAppService<Continent, ContinentDto, Guid,
     protected override string UpdatePolicyName { get; set; } = AdventureWorksAbpPermissions.Continent.Update;
     protected override string DeletePolicyName { get; set; } = AdventureWorksAbpPermissions.Continent.Delete;
 
-    //private readonly IContinentRepository _repository;
     private readonly IContinentRepository _continentRepository;
     private readonly ContinentManager _continentManager;
 
@@ -97,7 +96,7 @@ public class ContinentAppService : CrudAppService<Continent, ContinentDto, Guid,
             await _continentManager.ChangeNameAsync(continent, input.Name);
         }
         continent.Name = input.Name;
-        //await _continentRepository.UpdateAsync(ObjectMapper.Map<ContinentDto, CreateUpdateContinentDto>(continent));
+
         await _continentRepository.UpdateAsync(continent);
     }
 

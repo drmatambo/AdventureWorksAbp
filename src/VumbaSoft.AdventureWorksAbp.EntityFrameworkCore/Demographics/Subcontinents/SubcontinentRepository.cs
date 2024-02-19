@@ -67,21 +67,12 @@ public class SubcontinentRepository : EfCoreRepository<AdventureWorksAbpDbContex
     {
         var dbSet = await GetDbSetAsync();
 
-        //var subContinents = await dbSet
-        //    .WhereIf(!filter.Name.IsNullOrWhiteSpace(), subContinent => subContinent.Name.Contains(filter.Name))
-        //    .WhereIf(!filter.ContinentId.ToString().IsNullOrWhiteSpace(), subContinent => subContinent.ContinentId.ToString().Contains(filter.ContinentId.ToString()))
-        //    .WhereIf(!filter.Population.ToString().IsNullOrWhiteSpace(), subContinent => subContinent.Population.ToString().Contains(filter.Population.ToString()))
-        //    .WhereIf(!filter.Remarks.IsNullOrWhiteSpace(), subContinent => subContinent.Remarks.Contains(filter.Remarks)).ToListAsync();
-
-
         return (await dbSet
             .WhereIf(!filter.Name.IsNullOrWhiteSpace(), subContinent => subContinent.Name.Contains(filter.Name))
             .WhereIf(!filter.ContinentId.ToString().IsNullOrWhiteSpace(), subContinent => subContinent.ContinentId.ToString().Contains(filter.ContinentId.ToString()))
             .WhereIf(!filter.Population.ToString().IsNullOrWhiteSpace(), subContinent => subContinent.Population.ToString().Contains(filter.Population.ToString()))
             .WhereIf(!filter.Remarks.IsNullOrWhiteSpace(), subContinent => subContinent.Remarks.Contains(filter.Remarks))
             .ToListAsync()).Count;
-
-        //return subContinents.Count;
     }
 
     public override async Task<IQueryable<Subcontinent>> WithDetailsAsync()

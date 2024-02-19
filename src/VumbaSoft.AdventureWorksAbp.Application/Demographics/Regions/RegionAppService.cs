@@ -95,6 +95,7 @@ public class RegionAppService : CrudAppService<Region, RegionDto, Guid, RegionGe
         //Get the IQueryable<Continent> from the base Continent repository
         var queryable = await Repository.GetQueryableAsync();
 
+        //Map filter Dtos
         var filter = ObjectMapper.Map<RegionGetListInput, RegionFilter>(input);
 
         //Prepare a query to join Subcontinents and Continents

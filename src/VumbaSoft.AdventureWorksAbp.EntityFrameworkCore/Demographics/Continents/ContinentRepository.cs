@@ -20,10 +20,6 @@ public class ContinentRepository : EfCoreRepository<AdventureWorksAbpDbContext, 
     public async Task<Continent> FindByNameAsync(string name, bool includeDetails = true, CancellationToken cancellationToken = default)
     {
         var dbSet = await GetDbSetAsync();
-        //return await dbSet. IncludeDetails(includeDetails)
-        //    .Where(continent => continent.Name == name)
-        //    .OrderBy( x => x.Name)
-        //    .FirstOrDefaultAsync(GetCancellationToken(cancellationToken));
 
         return await dbSet.IncludeDetails(includeDetails)
             .OrderBy(x => x.Name)
@@ -42,7 +38,7 @@ public class ContinentRepository : EfCoreRepository<AdventureWorksAbpDbContext, 
 
         return await dbSet.IncludeDetails(includeDetails)
             .WhereIf(!filter.IsNullOrWhiteSpace(), continent => continent.Name.Contains(filter))
-            .OrderBy(sorting /*x => x.Name*/)
+            .OrderBy(sorting)
             .Skip(skipCount)
             .Take(maxResultCount)
             .ToListAsync(GetCancellationToken(cancellationToken));

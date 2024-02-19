@@ -15,7 +15,13 @@ using Volo.Abp.ObjectMapping;
 namespace VumbaSoft.AdventureWorksAbp.Demographics.StateProvinces;
 
 
-public class StateProvinceAppService : CrudAppService<StateProvince, StateProvinceDto, Guid, StateProvinceGetListInput, CreateStateProvinceDto, UpdateStateProvinceDto>,
+public class StateProvinceAppService : CrudAppService<
+    StateProvince, 
+    StateProvinceDto, 
+    Guid, 
+    StateProvinceGetListInput, 
+    CreateStateProvinceDto, 
+    UpdateStateProvinceDto>,
     IStateProvinceAppService
 {
     protected override string GetPolicyName { get; set; } = AdventureWorksAbpPermissions.StateProvince.Default;
@@ -28,7 +34,10 @@ public class StateProvinceAppService : CrudAppService<StateProvince, StateProvin
     private readonly ICountryRepository _countryRepository;
     private readonly IRegionRepository _rerionRepository;
 
-    public StateProvinceAppService(IStateProvinceRepository stateProvinceRepository, ICountryRepository countryRepository, IRegionRepository rerionRepository) : base(stateProvinceRepository)
+    public StateProvinceAppService(
+        IStateProvinceRepository stateProvinceRepository, 
+        ICountryRepository countryRepository, 
+        IRegionRepository rerionRepository) : base(stateProvinceRepository)
     {
         _stateProvinceRepository = stateProvinceRepository;
         _countryRepository = countryRepository;
@@ -81,6 +90,7 @@ public class StateProvinceAppService : CrudAppService<StateProvince, StateProvin
         //Get the IQueryable<Continent> from the base Continent repository
         var queryable = await Repository.GetQueryableAsync();
 
+        //Map the Filter Dtos
         var filter = ObjectMapper.Map<StateProvinceGetListInput, StateProvinceFilter>(input);
 
         //Prepare a query to join Subcontinents and Continents

@@ -91,13 +91,5 @@ public class AdventureWorksAbpDbContext :
         builder.ConfigureTenantManagement();
         builder.ConfigureDemographics();
 
-        /* Configure your own tables/entities inside here */
-
-        //builder.Entity<YourEntity>(b =>
-        //{
-        //    b.ToTable(AdventureWorksAbpConsts.DbTablePrefix + "YourEntities", AdventureWorksAbpConsts.DbSchema);
-        //    b.ConfigureByConvention(); //auto configure for the base class props
-        //    //...
-        //});
     }
 }

@@ -6,5 +6,5 @@ namespace VumbaSoft.AdventureWorksAbp.Web;
 [Dependency(ReplaceServices = true)]
 public class AdventureWorksAbpBrandingProvider : DefaultBrandingProvider
 {
-    public override string AppName => "AdventureWorksAbp";
+    public override string AppName => "Adventure Works Abp";
 }

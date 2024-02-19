@@ -32,7 +32,6 @@ public class SubcontinentAppService : CrudAppService<
     protected override string DeletePolicyName { get; set; } = AdventureWorksAbpPermissions.Subcontinent.Delete;
 
     private readonly ISubcontinentRepository _subContinentRepository;
-    //private readonly ISubcontinentRepository _subContinentRepository;
     private readonly IContinentRepository _continentRepository;
 
     public SubcontinentAppService(
@@ -46,13 +45,6 @@ public class SubcontinentAppService : CrudAppService<
     protected override async Task<IQueryable<Subcontinent>> CreateFilteredQueryAsync(SubcontinentGetListInput input)
     {
         // TODO: AbpHelper generated
-        //return (await base.CreateFilteredQueryAsync(input))
-        //    .WhereIf(input.Name != null, x => x.Name.Contains(input.Name))
-        //    .WhereIf(input.ContinentId != null, x => x.ContinentId = input.ContinentId)
-        //    .WhereIf(input.Population != null, x => x.Population == input.Population)
-        //    .WhereIf(input.Remarks != null, x => x.Remarks == input.Remarks)
-            //;
-
         return (await base.CreateFilteredQueryAsync(input))
             .WhereIf(input.Name != null, x => x.Name.Contains(input.Name))
             .WhereIf(input.ContinentId != null, x => x.ContinentId.ToString().Contains(input.ContinentId.ToString()))
@@ -65,9 +57,6 @@ public class SubcontinentAppService : CrudAppService<
     {
         //Get the IQueryable<Subcontinent> from the repository
         var queryable = await Repository.GetQueryableAsync();
-
-        //Get continent and the colection of subcontinents
-        //var continentsAndSubcontinents = await _continentRepository.WithDetailsAsync(s => s.Subcontinents);
 
         //Prepare a query to join Subcontinents and Continents
         var query = from subcontinent in queryable
@@ -96,7 +85,7 @@ public class SubcontinentAppService : CrudAppService<
         //Get the IQueryable<Continent> from the base Continent repository
         var queryable = await Repository.GetQueryableAsync();
 
-        //Create a filter for GetTotalCountAsync
+        //Create Mapping for a filter Dtos for GetTotalCountAsync
         var filter = ObjectMapper.Map<SubcontinentGetListInput, SubcontinentFilter>(input);
 
         //Prepare a query to join Subcontinents and Continents
@@ -118,9 +107,6 @@ public class SubcontinentAppService : CrudAppService<
         var queryResult = await AsyncExecuter.ToListAsync(
             query);
 
-        //var queryResult1 = await AsyncExecuter.ToListAsync(
-        //    query);
-
         //Convert the query result to a list of subcontinentDto objects
         var subcontinentDtos = queryResult.Select(x =>
         {
@@ -132,20 +118,7 @@ public class SubcontinentAppService : CrudAppService<
         }).ToList();
 
         //Get the total count with another query
-        //var totalCount = await Repository.GetCountAsync();
-
         var totalCount = await _subContinentRepository.GetTotalCountAsync(filter);
-
-        //var totalCount = await _subContinentRepository.GetTotalCountAsync(query);
-
-        //var totalCount = await _subContinentRepository.CountAsync(
-        //    x => 
-        //        x.Name.Contains(input.Name) || 
-        //        x.ContinentId.ToString().Contains(input.ContinentId.ToString()) || 
-        //        x.Population.ToString().Contains(input.Population.ToString()) || 
-        //        x.Remarks.Contains(input.Remarks)
-        //);
-
 
         return new PagedResultDto<SubcontinentDto>(totalCount, subcontinentDtos);
     }

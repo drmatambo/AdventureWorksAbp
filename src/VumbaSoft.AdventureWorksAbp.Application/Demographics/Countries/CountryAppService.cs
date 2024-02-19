@@ -31,7 +31,10 @@ public class CountryAppService : CrudAppService<Country, CountryDto, Guid, Count
     private readonly IContinentRepository _continentRepository;
 
 
-    public CountryAppService(ICountryRepository countryRepository, ISubcontinentRepository subContinentRepository, IContinentRepository continentRepository) : base(countryRepository)
+    public CountryAppService(
+        ICountryRepository countryRepository, 
+        ISubcontinentRepository subContinentRepository, 
+        IContinentRepository continentRepository) : base(countryRepository)
     {
         _countryRepository = countryRepository;
         _subContinentRepository = subContinentRepository;
@@ -142,12 +145,8 @@ public class CountryAppService : CrudAppService<Country, CountryDto, Guid, Count
         }).ToList();
 
 
-        //Get the total count with another query
-        //var totalCount = await Repository.GetCountAsync();
-
+        //Get the total count with another query from Repository
         var totalCount = await _countryRepository.GetTotalCountAsync(filter);
-
-        //var totalCount = await Repository.CountAsync(x => x.Name.Contains(input.Name));
 
         return new PagedResultDto<CountryDto>(totalCount, countryDtos);
     }
@@ -155,13 +154,17 @@ public class CountryAppService : CrudAppService<Country, CountryDto, Guid, Count
     public async Task<ListResultDto<CountrySubcontinentLookUpDto>> GetSubContinentLookupAsync()
     {
         var subContinents = await _subContinentRepository.GetListAsync();
-        return new ListResultDto<CountrySubcontinentLookUpDto>(ObjectMapper.Map<List<Subcontinent>, List<CountrySubcontinentLookUpDto>>(subContinents));
+
+        return new ListResultDto<CountrySubcontinentLookUpDto>(
+            ObjectMapper.Map<List<Subcontinent>, List<CountrySubcontinentLookUpDto>>(subContinents));
     }
 
     public async Task<ListResultDto<CountryContinentLookUpDto>> GetContinentLookupAsync()
     {
         var continents = await _continentRepository.GetListAsync();
-        return new ListResultDto<CountryContinentLookUpDto>(ObjectMapper.Map<List<Continent>, List<CountryContinentLookUpDto>>(continents));
+
+        return new ListResultDto<CountryContinentLookUpDto>(
+            ObjectMapper.Map<List<Continent>, List<CountryContinentLookUpDto>>(continents));
     }
 
     private static string NormalizeSorting(string sorting)

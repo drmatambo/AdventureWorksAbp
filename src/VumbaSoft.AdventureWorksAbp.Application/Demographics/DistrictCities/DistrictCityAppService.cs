@@ -14,7 +14,13 @@ using System.Collections.Generic;
 namespace VumbaSoft.AdventureWorksAbp.Demographics.DistrictCities;
 
 
-public class DistrictCityAppService : CrudAppService<DistrictCity, DistrictCityDto, Guid, DistrictCityGetListInput, CreateDistrictCityDto, UpdateDistrictCityDto>,
+public class DistrictCityAppService : CrudAppService<
+    DistrictCity, 
+    DistrictCityDto, 
+    Guid, 
+    DistrictCityGetListInput, 
+    CreateDistrictCityDto, 
+    UpdateDistrictCityDto>,
     IDistrictCityAppService
 {
     protected override string GetPolicyName { get; set; } = AdventureWorksAbpPermissions.DistrictCity.Default;
@@ -85,6 +91,7 @@ public class DistrictCityAppService : CrudAppService<DistrictCity, DistrictCityD
         //Get the IQueryable<Continent> from the base Continent repository
         var queryable = await Repository.GetQueryableAsync();
 
+        //Mapping the filter Dtos
         var filter = ObjectMapper.Map<DistrictCityGetListInput, DistrictCityFilter>(input);
 
         //Prepare a query to join Subcontinents and Continents
@@ -93,6 +100,7 @@ public class DistrictCityAppService : CrudAppService<DistrictCity, DistrictCityD
                     join country in await _countryRepository.GetQueryableAsync() on districtCity.CountryId equals country.Id
                     select new { districtCity, stateProvince, country };
 
+        //Aplay filter and pagination
         query = query
             .WhereIf(input.CountryId != null, x => x.districtCity.CountryId.ToString().Contains(input.CountryId.ToString()))
             .WhereIf(input.StateProvinceId != null, x => x.districtCity.StateProvinceId.ToString().Contains(input.StateProvinceId.ToString()))
@@ -110,8 +118,6 @@ public class DistrictCityAppService : CrudAppService<DistrictCity, DistrictCityD
         //Execute the query and get the continents with subcontinents
         var queryResult = await AsyncExecuter.ToListAsync(query);
 
-        //var queryResult = await _districtCityRepository.GetTotalCountAsync(filter);
-
         var districtCityDtos = queryResult.Select(x =>
         {
             var districtCityDto = ObjectMapper.Map<DistrictCity, DistrictCityDto>(x.districtCity);
@@ -121,6 +127,7 @@ public class DistrictCityAppService : CrudAppService<DistrictCity, DistrictCityD
             return districtCityDto;
         }).ToList();
 
+        //Get the total count with another query from the repository 
         var totalCount = await _districtCityRepository.GetTotalCountAsync(filter);
 
         return new PagedResultDto<DistrictCityDto>(totalCount, districtCityDtos);

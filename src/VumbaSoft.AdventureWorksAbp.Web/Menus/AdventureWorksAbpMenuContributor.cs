@@ -97,11 +97,6 @@ public class AdventureWorksAbpMenuContributor : IMenuContributor
         #region Demographics Menu Itens
         if (await context.IsGrantedAsync(AdventureWorksAbpPermissions.Continent.Default))
         {
-            //demographicsGroupMenu.AddItem(new ApplicationMenuItem(
-            //    AdventureWorksAbpMenus.Continent,
-            //    AdventureWorksAbpMenus.ContinentNavMenu
-            //));
-
             demographicsGroupMenu.AddItem(new ApplicationMenuItem(
                 AdventureWorksAbpMenus.Continent,
                 l["Menu:Continent"], "/Demographics/Continents/Continent")

@@ -117,9 +117,10 @@ public class LocalityAppService : CrudAppService<Locality, LocalityDto, Guid, Lo
         //Get the IQueryable<Continent> from the base Continent repository
         var queryable = await Repository.GetQueryableAsync();
 
+        //Map the filter Dtos
         var filter = ObjectMapper.Map<LocalityGetListInput, LocalityFilter>(input);
 
-        //Prepare a query to join Subcontinents and Continents
+        //Prepare a query to join all table involved in locality table
         var query = from locality in queryable
                     join districtCity in await _districtCityRepository.GetQueryableAsync() on locality.DistrictCityId equals districtCity.Id
                     join stateProvince in await _stateProvinceRepository.GetQueryableAsync() on locality.StateProvinceId equals stateProvince.Id
@@ -167,6 +168,7 @@ public class LocalityAppService : CrudAppService<Locality, LocalityDto, Guid, Lo
             return localityDto;
         }).ToList();
 
+        //Get the total count with another query from Repository
         var totalCount = await _localityRepository.GetTotalCountAsync(filter);
 
         return new PagedResultDto<LocalityDto>(totalCount, localityDtos);
