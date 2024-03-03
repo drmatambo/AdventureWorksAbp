@@ -13,7 +13,7 @@ public static class SubcontinentEfCoreQueryableExtensions
         }
 
         return queryable
-             //.Include(x => x.Countries) // TODO: AbpHelper generated
+             .Include(x => x.Countries) // TODO: AbpHelper generated
             ;
     }
 }

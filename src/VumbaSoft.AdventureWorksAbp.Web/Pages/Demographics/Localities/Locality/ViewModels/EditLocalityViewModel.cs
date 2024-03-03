@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.DataAnnotations;
 using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
@@ -9,32 +10,38 @@ public class EditLocalityViewModel
     //[DisabledInput]
     //[Display(Name = "LocalityContinentId")]
     //[SelectItems(nameof(EditModalModel.Continents))]
-    //public Guid ContinentId { get; set; }
+    [HiddenInput]
+    public Guid ContinentId { get; set; }
 
     //[DisabledInput]
     //[Display(Name = "LocalitySubcontinentId")]
     //[SelectItems(nameof(EditModalModel.SubContinents))]
-    //public Guid SubcontinentId { get; set; }
+    [HiddenInput]
+    public Guid SubcontinentId { get; set; }
 
     //[DisabledInput]
     //[Display(Name = "LocalityCountryId")]
     //[SelectItems(nameof(EditModalModel.Countries))]
-    //public Guid CountryId { get; set; }
+    [HiddenInput]
+    public Guid CountryId { get; set; }
 
     //[DisabledInput]
     //[Display(Name = "LocalityRegionId")]
     //[SelectItems(nameof(EditModalModel.Regions))]
-    //public Guid RegionId { get; set; }
+    [HiddenInput]
+    public Guid RegionId { get; set; }
 
     //[DisabledInput]
     //[Display(Name = "LocalityStateProvinceId")]
     //[SelectItems(nameof(EditModalModel.StateProvinces))]
-    //public Guid StateProvinceId { get; set; }
+    [HiddenInput]
+    public Guid StateProvinceId { get; set; }
 
     //[DisabledInput]
     //[Display(Name = "LocalityDistrictCityId")]
     //[SelectItems(nameof(EditModalModel.DistrictCities))]
-    //public Guid DistrictCityId { get; set; }
+    [HiddenInput]
+    public Guid DistrictCityId { get; set; }
 
     [DisabledInput]
     [Display(Name = "Continent Name")]

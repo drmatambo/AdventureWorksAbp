@@ -2,6 +2,7 @@ using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using VumbaSoft.AdventureWorksAbp.Demographics.Countries;
 
@@ -34,6 +35,21 @@ public class Subcontinent : FullAuditedAggregateRoot<Guid>
         Population = population;
         Remarks = remarks;
         Countries = new Collection<Country>();
+    }
+
+    internal Subcontinent UpdateName(string name) 
+    {
+        SetName(name);
+        return this;
+    }
+
+    private void SetName(string name)
+    {
+        Name = Check.NotNullOrWhiteSpace(
+            name,
+            nameof(name),
+            maxLength: AdventureWorksAbpSharedConsts.NameMaxLength
+        );
     }
 }
 

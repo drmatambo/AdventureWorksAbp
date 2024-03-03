@@ -11,6 +11,8 @@ using Volo.Abp.Domain.Entities;
 using System.Collections.Generic;
 using Volo.Abp.ObjectMapping;
 using Volo.Abp.Domain.Repositories;
+using VumbaSoft.AdventureWorksAbp.Demographics.Countries;
+using System.Collections.ObjectModel;
 
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.Subcontinents;
@@ -33,13 +35,16 @@ public class SubcontinentAppService : CrudAppService<
 
     private readonly ISubcontinentRepository _subContinentRepository;
     private readonly IContinentRepository _continentRepository;
+    private readonly ICountryRepository _countryRepository;
 
     public SubcontinentAppService(
-        ISubcontinentRepository SubcontinentRepository, 
-        IContinentRepository continentRepository) : base(SubcontinentRepository)
+         ISubcontinentRepository subcontinentRepository,
+         IContinentRepository continentRepository,
+         ICountryRepository countryRepository) : base(subcontinentRepository)
     {
-        _subContinentRepository = SubcontinentRepository;
+        _subContinentRepository = subcontinentRepository;
         _continentRepository = continentRepository;
+        _countryRepository = countryRepository;
     }
 
     protected override async Task<IQueryable<Subcontinent>> CreateFilteredQueryAsync(SubcontinentGetListInput input)
@@ -53,16 +58,52 @@ public class SubcontinentAppService : CrudAppService<
             ;
     }
 
+    public virtual async Task<SubcontinentDto> GetSubContinentUpdateAsync(Guid id)
+    {
+        var subContinent = await _subContinentRepository.GetSubContinentUpdateAsync(id);
+
+        return ObjectMapper.Map<Subcontinent, SubcontinentDto>(subContinent);
+    }
+
     public override async Task<SubcontinentDto> GetAsync(Guid id)
     {
+        //var subContinent = await Repository.GetAsync(id);
+        //return ObjectMapper.Map<Subcontinent, SubcontinentDto>(subContinent);
+
+
         //Get the IQueryable<Subcontinent> from the repository
         var queryable = await Repository.GetQueryableAsync();
+
+        //var queryable = await Repository.WithDetailsAsync(x => x.Countries);
 
         //Prepare a query to join Subcontinents and Continents
         var query = from subcontinent in queryable
                     join continent in await _continentRepository.GetQueryableAsync() on subcontinent.ContinentId equals continent.Id
+                    //join country in await _countryRepository.GetQueryableAsync() on subcontinent.Id equals country.SubcontinentId
+                    //into subContinentCountries
+                    //from country in subContinentCountries.DefaultIfEmpty()
                     where subcontinent.Id == id
-                    select new { subcontinent, continent };
+                    select new
+                    {
+                        subcontinent,
+                        continent,
+                        //country
+                        //subContinentCountries
+                    };
+
+        //var query = from country in await _countryRepository.GetQueryableAsync()
+        //            join subcontinent in await _subContinentRepository.GetQueryableAsync() on country.SubcontinentId equals subcontinent.Id
+        //            join continent in await _continentRepository.GetQueryableAsync() on subcontinent.ContinentId equals continent.Id
+        //            into subContinentCountries
+        //            from country in subContinentCountries.DefaultIfEmpty()
+        //            where subcontinent.Id == id
+        //            select new
+        //            {
+        //                subcontinent,
+        //                continent,
+        //                //country
+        //                subContinentCountries
+        //            };
 
         //Execute the query and get the continents with subcontinents
         var queryResult = await AsyncExecuter.FirstOrDefaultAsync(query);
@@ -74,8 +115,13 @@ public class SubcontinentAppService : CrudAppService<
 
         var subcontinentDto = ObjectMapper.Map<Subcontinent, SubcontinentDto>(queryResult.subcontinent);
 
+        //subcontinentDto.Id = queryResult.subcontinent.Id;
         subcontinentDto.ContinentName = queryResult.continent.Name;
+        //subcontinentDto.Countries = queryResult;
         subcontinentDto.Countries = new();
+        //subcontinentDto.Countries = queryResult.subContinentCountries.ToDynamicListAsync();
+        //subcontinentDto.Countries = (Collection<Countries.Dtos.CreateCountryDto>)queryResult.subContinentCountries;
+
 
         return subcontinentDto;
     }
@@ -85,15 +131,12 @@ public class SubcontinentAppService : CrudAppService<
         //Get the IQueryable<Continent> from the base Continent repository
         var queryable = await Repository.GetQueryableAsync();
 
-        //Create Mapping for a filter Dtos for GetTotalCountAsync
-        var filter = ObjectMapper.Map<SubcontinentGetListInput, SubcontinentFilter>(input);
-
         //Prepare a query to join Subcontinents and Continents
         var query = from Subcontinent in queryable
                     join Continent in await _continentRepository.GetQueryableAsync() on Subcontinent.ContinentId equals Continent.Id
                     select new { Subcontinent, Continent };
 
-        //Paging
+        //Paging and filtering with joined tables
         query = query
             .WhereIf(input.Name != null, x => x.Subcontinent.Name.Contains(input.Name))
             .WhereIf(input.ContinentId != null, x => x.Subcontinent.ContinentId.ToString().Contains(input.ContinentId.ToString()))
@@ -117,19 +160,23 @@ public class SubcontinentAppService : CrudAppService<
             return subcontinentDto;
         }).ToList();
 
+
+        //Create Mapping for a filter Dtos for GetTotalCountAsync
+        var filter = ObjectMapper.Map<SubcontinentGetListInput, SubcontinentFilter>(input);
+
         //Get the total count with another query
         var totalCount = await _subContinentRepository.GetTotalCountAsync(filter);
 
         return new PagedResultDto<SubcontinentDto>(totalCount, subcontinentDtos);
     }
 
-    public async Task<ListResultDto<ContinentLookUpDto>> GetContinentLookupAsync()
+    public virtual async Task<ListResultDto<ContinentLookUpDto>> GetContinentLookupAsync()
     {
         var continents = await _continentRepository.GetListAsync();
         return new ListResultDto<ContinentLookUpDto>(ObjectMapper.Map<List<Continent>, List<ContinentLookUpDto>>(continents));
     }
 
-    public async Task<ListResultDto<SubcontinentLookUpDto>> GetSubContinentLookupAsync()
+    public virtual async Task<ListResultDto<SubcontinentLookUpDto>> GetSubContinentLookupAsync()
     {
         var subContinents = await _subContinentRepository.GetListAsync();
         return new ListResultDto<SubcontinentLookUpDto>(ObjectMapper.Map<List<Subcontinent>, List<SubcontinentLookUpDto>>(subContinents));

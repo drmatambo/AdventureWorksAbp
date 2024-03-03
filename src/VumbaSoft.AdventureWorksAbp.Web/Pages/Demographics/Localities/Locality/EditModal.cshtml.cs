@@ -18,6 +18,7 @@ public class EditModalModel : AdventureWorksAbpPageModel
 
     [BindProperty]
     public EditLocalityViewModel ViewModel { get; set; }
+
     public List<SelectListItem> Continents { get; set; }
     public List<SelectListItem> SubContinents { get; set; }
     public List<SelectListItem> Countries { get; set; }

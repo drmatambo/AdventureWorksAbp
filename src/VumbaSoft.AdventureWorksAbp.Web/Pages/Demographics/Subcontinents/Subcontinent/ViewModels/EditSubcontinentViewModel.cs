@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.DataAnnotations;
 using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
@@ -6,10 +7,14 @@ namespace VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.Subcontinents.Subco
 
 public class EditSubcontinentViewModel
 {
+    [HiddenInput]
+    public Guid Id { get; set; }
+
     //[SelectItems(nameof(EditModalModel.Continents))]
     //[DisabledInput]
     //[Display(Name = "SubcontinentContinentId")]
-    //public Guid ContinentId { get; set; }
+    [HiddenInput]
+    public Guid ContinentId { get; set; }
 
     [DisabledInput]
     [Display(Name = "Continent Name")]
@@ -18,6 +23,7 @@ public class EditSubcontinentViewModel
     [Display(Name = "Subcontinent Name")]
     public String Name { get; set; }
 
+    //[DataType(DataType.Currency)]
     [Display(Name = "Subcontinent Population")]
     public Int64 Population { get; set; }
 

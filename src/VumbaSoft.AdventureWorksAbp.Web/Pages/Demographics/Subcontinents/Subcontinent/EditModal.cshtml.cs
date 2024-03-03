@@ -42,6 +42,10 @@ public class EditModalModel : AdventureWorksAbpPageModel
 
     public virtual async Task<IActionResult> OnPostAsync()
     {
+        ////Get subcontinents without joining tables
+        //var subContinetent = await _service.GetSubContinentUpdateAsync(Id);
+        //ViewModel = ObjectMapper.Map<SubcontinentDto, EditSubcontinentViewModel>(subContinetent);
+
         var dto = ObjectMapper.Map<EditSubcontinentViewModel, UpdateSubcontinentDto>(ViewModel);
         await _service.UpdateAsync(Id, dto);
         return NoContent();

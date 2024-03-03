@@ -25,7 +25,9 @@ public class ContinentAppService : CrudAppService<Continent, ContinentDto, Guid,
     private readonly IContinentRepository _continentRepository;
     private readonly ContinentManager _continentManager;
 
-    public ContinentAppService(IContinentRepository continentRepository, ContinentManager continentManager) : base(continentRepository)
+    public ContinentAppService(
+        IContinentRepository continentRepository, 
+        ContinentManager continentManager) : base(continentRepository)
     {
         _continentManager = continentManager;
         _continentRepository = continentRepository;

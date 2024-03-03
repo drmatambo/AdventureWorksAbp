@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.DataAnnotations;
 using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
@@ -9,7 +10,8 @@ public class EditDistrictCityViewModel
     //[DisabledInput]
     //[Display(Name = "DistrictCityCountryId")]
     //[SelectItems(nameof(EditModalModel.Provinces))]
-    //public Guid CountryId { get; set; }
+    [HiddenInput]
+    public Guid CountryId { get; set; }
 
     [DisabledInput]
     [Display(Name = "DistrictCityCountryName")]
@@ -18,7 +20,8 @@ public class EditDistrictCityViewModel
     //[DisabledInput]
     //[Display(Name = "DistrictCityStateProvinceId")]
     //[SelectItems(nameof(EditModalModel.Provinces))]
-    //public Guid StateProvinceId { get; set; }
+    [HiddenInput]
+    public Guid StateProvinceId { get; set; }
 
     [DisabledInput]
     [Display(Name = "DistrictCityStateProvinceName")]

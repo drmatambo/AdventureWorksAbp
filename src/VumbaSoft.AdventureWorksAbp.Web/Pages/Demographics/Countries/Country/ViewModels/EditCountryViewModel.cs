@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.DataAnnotations;
 using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
@@ -9,7 +10,8 @@ public class EditCountryViewModel
     //[DisabledInput]
     //[Display(Name = "CountryContinentId")]
     //[SelectItems(nameof(EditModalModel.CountryContinents))]
-    //public Guid ContinentId { get; set; }
+    [HiddenInput]
+    public Guid ContinentId { get; set; }
 
     [DisabledInput]
     [Display(Name = "CountinentName")]
@@ -18,7 +20,8 @@ public class EditCountryViewModel
     //[DisabledInput]
     //[Display(Name = "CountrySubcontinentId")]
     //[SelectItems(nameof(EditModalModel.CountrySubContinents))]
-    //public Guid SubcontinentId { get; set; }
+    [HiddenInput]
+    public Guid SubcontinentId { get; set; }
 
     [DisabledInput]
     [Display(Name = "CountinentName")]
