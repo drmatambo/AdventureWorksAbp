@@ -11,7 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\VumbaSoft.AdventureWorksAbp.EntityFrameworkCore\VumbaSoft.AdventureWorksAbp.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\VumbaSoft.AdventureWorksAbp.Application.Tests\VumbaSoft.AdventureWorksAbp.Application.Tests.csproj" />
-    <PackageReference Include="Volo.Abp.EntityFrameworkCore.Sqlite" Version="8.0.2" />
+    <PackageReference Include="Volo.Abp.EntityFrameworkCore.Sqlite" Version="8.0.4" />
   </ItemGroup>
 
   <ItemGroup>
