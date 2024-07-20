@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using Volo.Abp.ObjectMapping;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
+using System.Diagnostics.CodeAnalysis;
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.Countries;
 
@@ -102,7 +103,7 @@ public class CountryAppService : CrudAppService<Country, CountryDto, Guid, Count
         var queryable = await Repository.GetQueryableAsync();
 
         //Create Mapping for Filter
-        var filter = ObjectMapper.Map<CountryGetListInput, CountryFilter>(input);
+        var filter = ObjectMapper.Map<CountryGetListInput, CountryFilter>( input);
 
         //Prepare a query to join Subcontinents and Continents
         var query = from country in queryable
@@ -151,9 +152,14 @@ public class CountryAppService : CrudAppService<Country, CountryDto, Guid, Count
         return new PagedResultDto<CountryDto>(totalCount, countryDtos);
     }
 
-    public async Task<ListResultDto<CountrySubcontinentLookUpDto>> GetSubContinentLookupAsync()
+    public async Task<ListResultDto<CountrySubcontinentLookUpDto>> GetSubContinentLookupAsync(
+        CountryGetListInput input /*Guid continentId*/
+        )
     {
-        var subContinents = await _subContinentRepository.GetListAsync();
+        //var sfilter = new SubcontinentGetListInput();
+        //sfilter.ContinentId = input.ContinentId;
+
+        var subContinents = await _subContinentRepository.GetListAsync(0,int.MaxValue,sorting: "Name ASC", filter: input.ContinentId.ToString());
 
         return new ListResultDto<CountrySubcontinentLookUpDto>(
             ObjectMapper.Map<List<Subcontinent>, List<CountrySubcontinentLookUpDto>>(subContinents));
@@ -193,5 +199,13 @@ public class CountryAppService : CrudAppService<Country, CountryDto, Guid, Count
         }
 
         return $"country.{sorting}";
+    }
+
+    public async Task<ListResultDto<CountrySubcontinentLookUpDto>> GetSubContinentLookupAsync()
+    {
+        var subContinents = await _subContinentRepository.GetListAsync();
+
+        return new ListResultDto<CountrySubcontinentLookUpDto>(
+            ObjectMapper.Map<List<Subcontinent>, List<CountrySubcontinentLookUpDto>>(subContinents));
     }
 }

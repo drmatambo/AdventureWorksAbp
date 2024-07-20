@@ -12,11 +12,15 @@ public interface ISubcontinentRepository : IRepository<Subcontinent, Guid>
     bool includeDetails = false,
     CancellationToken cancellationToken = default);
 
+    Task<List<Subcontinent>> GetSubcontinentListByIdAsync(Guid continentId,
+    bool includeDetails = false,
+    CancellationToken cancellationToken = default);
+
     Task<List<Subcontinent>> GetListAsync(
         int skipCount,
         int maxResultCount,
         string sorting,
-        string filter = null,
+        string? filter = null,
         bool includeDetails = false,
         CancellationToken cancellationToken = default
     );
@@ -29,4 +33,5 @@ public interface ISubcontinentRepository : IRepository<Subcontinent, Guid>
     //);
 
     Task<int> GetTotalCountAsync(SubcontinentFilter filter);
+    //Task<List<Subcontinent>> GetListAsync(int v1, int v2, string v3, Subcontinents.Dtos.SubcontinentGetListInput filter);
 }

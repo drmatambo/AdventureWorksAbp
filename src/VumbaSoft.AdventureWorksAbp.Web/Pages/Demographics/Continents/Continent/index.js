@@ -69,7 +69,23 @@ $(function () {
             },
             {
                 title: l('ContinentPopulation'),
-                data: "population"
+                data: "population",
+                render: function (data) {
+                    var number = DataTable
+                        .render
+                        .number('.', ',')
+                        .display(data, {
+                            locale: abp.localization.currentCulture.name
+                            }).toLocaleString();
+                    return number;
+                }
+
+                //,render: function (data) {
+                //    var number = dataTable.render
+                //        .number(',', '.', 2, '$')
+                //        .display(data);
+                //    return number;
+                //}
             },
             {
                 title: l('ContinentRemarks'),

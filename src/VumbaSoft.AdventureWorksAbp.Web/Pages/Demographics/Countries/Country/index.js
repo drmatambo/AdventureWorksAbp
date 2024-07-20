@@ -22,8 +22,16 @@ $(function () {
     var l = abp.localization.getResource('AdventureWorksAbp');
 
     var service = vumbaSoft.adventureWorksAbp.demographics.countries.country;
-    var createModal = new abp.ModalManager(abp.appPath + 'Demographics/Countries/Country/CreateModal');
-    var editModal = new abp.ModalManager(abp.appPath + 'Demographics/Countries/Country/EditModal');
+
+    var createModal = new abp.ModalManager({
+        viewUrl: abp.appPath + 'Demographics/Countries/Country/CreateModal',
+        modalClass: 'CreateCountryDdl'
+    });
+
+    var editModal = new abp.ModalManager({
+        viewUrl: abp.appPath + 'Demographics/Countries/Country/EditModal',
+        modalClass: 'EditCountryDdl'
+    });
 
     var dataTable = $('#CountryTable').DataTable(abp.libs.datatables.normalizeConfiguration({
         processing: true,
@@ -109,7 +117,16 @@ $(function () {
             },
             {
                 title: l('CountryPopulation'),
-                data: "population"
+                data: "population",
+                render: function (data) {
+                    var number = DataTable
+                        .render
+                        .number('.', ',')
+                        .display(data, {
+                            locale: abp.localization.currentCulture.name
+                        }).toLocaleString();
+                    return number;
+                }
             },
             {
                 title: l('CountryEmoji'),
@@ -126,6 +143,7 @@ $(function () {
         ]
     }));
 
+    
     createModal.onResult(function () {
         dataTable.ajax.reload();
     });

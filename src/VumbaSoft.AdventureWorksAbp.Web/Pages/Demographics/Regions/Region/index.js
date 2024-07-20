@@ -22,8 +22,16 @@ $(function () {
     var l = abp.localization.getResource('AdventureWorksAbp');
 
     var service = vumbaSoft.adventureWorksAbp.demographics.regions.region;
-    var createModal = new abp.ModalManager(abp.appPath + 'Demographics/Regions/Region/CreateModal');
-    var editModal = new abp.ModalManager(abp.appPath + 'Demographics/Regions/Region/EditModal');
+
+    var createModal = new abp.ModalManager({
+        viewUrl: abp.appPath + 'Demographics/Regions/Region/CreateModal',
+        modalClass: 'CreateRegionDdl'
+    });
+
+    var editModal = new abp.ModalManager({
+        viewUrl: abp.appPath + 'Demographics/Regions/Region/EditModal',
+        modalClass: 'EditRegionDdl'
+    });
 
     var dataTable = $('#RegionTable').DataTable(abp.libs.datatables.normalizeConfiguration({
         processing: true,
@@ -69,7 +77,16 @@ $(function () {
             },
             {
                 title: l('RegionPopulation'),
-                data: "population"
+                data: "population",
+                render: function (data) {
+                    var number = DataTable
+                        .render
+                        .number('.', ',')
+                        .display(data, {
+                            locale: abp.localization.currentCulture.name
+                        }).toLocaleString();
+                    return number;
+                }
             },
             {
                 title: l('RegionCountryName'),

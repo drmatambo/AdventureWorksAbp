@@ -22,8 +22,16 @@ $(function () {
     var l = abp.localization.getResource('AdventureWorksAbp');
 
     var service = vumbaSoft.adventureWorksAbp.demographics.districtCities.districtCity;
-    var createModal = new abp.ModalManager(abp.appPath + 'Demographics/DistrictCities/DistrictCity/CreateModal');
-    var editModal = new abp.ModalManager(abp.appPath + 'Demographics/DistrictCities/DistrictCity/EditModal');
+
+    var createModal = new abp.ModalManager({
+        viewUrl: abp.appPath + 'Demographics/DistrictCities/DistrictCity/CreateModal',
+        modalClass: 'CreateDistrictCityDdl'
+    });
+
+    var editModal = new abp.ModalManager({
+        viewUrl: abp.appPath + 'Demographics/DistrictCities/DistrictCity/EditModal',
+        modalClass: 'EditDistrictCityDdl'
+    });
 
     var dataTable = $('#DistrictCityTable').DataTable(abp.libs.datatables.normalizeConfiguration({
         processing: true,
@@ -77,7 +85,16 @@ $(function () {
             },
             {
                 title: l('DistrictCityPopulation'),
-                data: "population"
+                data: "population",
+                render: function (data) {
+                    var number = DataTable
+                        .render
+                        .number('.', ',')
+                        .display(data, {
+                            locale: abp.localization.currentCulture.name
+                        }).toLocaleString();
+                    return number;
+                }
             },
             {
                 title: l('DistrictCityStateProvinceCode'),

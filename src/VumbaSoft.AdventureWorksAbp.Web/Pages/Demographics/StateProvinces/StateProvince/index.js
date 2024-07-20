@@ -22,8 +22,16 @@ $(function () {
     var l = abp.localization.getResource('AdventureWorksAbp');
 
     var service = vumbaSoft.adventureWorksAbp.demographics.stateProvinces.stateProvince;
-    var createModal = new abp.ModalManager(abp.appPath + 'Demographics/StateProvinces/StateProvince/CreateModal');
-    var editModal = new abp.ModalManager(abp.appPath + 'Demographics/StateProvinces/StateProvince/EditModal');
+
+    var createModal = new abp.ModalManager({
+        viewUrl: abp.appPath + 'Demographics/StateProvinces/StateProvince/CreateModal',
+        modalClass: 'CreateStateProvinceDdl'
+    });
+
+    var editModal = new abp.ModalManager({
+        viewUrl: abp.appPath + 'Demographics/StateProvinces/StateProvince/EditModal',
+        modalClass: 'EditStateProvinceDdl'
+    });
 
     var dataTable = $('#StateProvinceTable').DataTable(abp.libs.datatables.normalizeConfiguration({
         processing: true,
@@ -81,7 +89,16 @@ $(function () {
             },
             {
                 title: l('StateProvinceRegionCode'),
-                data: "regionCode"
+                data: "regionCode",
+                render: function (data) {
+                    var number = DataTable
+                        .render
+                        .number('.', ',')
+                        .display(data, {
+                            locale: abp.localization.currentCulture.name
+                        }).toLocaleString();
+                    return number;
+                }
             },
             {
                 title: l('StateProvinceStateProvinceCode'),

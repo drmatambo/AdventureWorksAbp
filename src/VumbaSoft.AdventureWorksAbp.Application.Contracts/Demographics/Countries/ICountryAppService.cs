@@ -16,6 +16,7 @@ public interface ICountryAppService :
         CreateCountryDto,
         UpdateCountryDto>
 {
+    Task<ListResultDto<CountrySubcontinentLookUpDto>> GetSubContinentLookupAsync(CountryGetListInput input);
     Task<ListResultDto<CountrySubcontinentLookUpDto>> GetSubContinentLookupAsync();
     Task<ListResultDto<CountryContinentLookUpDto>> GetContinentLookupAsync();
 

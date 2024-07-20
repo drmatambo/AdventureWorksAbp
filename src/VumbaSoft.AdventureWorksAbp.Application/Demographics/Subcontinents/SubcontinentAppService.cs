@@ -82,8 +82,12 @@ public class SubcontinentAppService : CrudAppService<
 
     public override async Task<PagedResultDto<SubcontinentDto>> GetListAsync(SubcontinentGetListInput input)
     {
-        //Get the IQueryable<Continent> from the base Continent repository
-        var queryable = await Repository.GetQueryableAsync();
+        if (input.Sorting.IsNullOrWhiteSpace())
+        {
+            input.Sorting = nameof(Subcontinent.Name);
+        }
+            //Get the IQueryable<Continent> from the base Continent repository
+            var queryable = await Repository.GetQueryableAsync();
 
         //Create Mapping for a filter Dtos for GetTotalCountAsync
         var filter = ObjectMapper.Map<SubcontinentGetListInput, SubcontinentFilter>(input);

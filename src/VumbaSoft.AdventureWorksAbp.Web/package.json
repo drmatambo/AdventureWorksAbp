@@ -6,6 +6,7 @@
     "@abp/aspnetcore.mvc.ui.theme.leptonxlite": "~3.0.4"
   },
   "devDependencies": {
-    "eslint": "^8.56.0"
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.34.0"
   }
 }

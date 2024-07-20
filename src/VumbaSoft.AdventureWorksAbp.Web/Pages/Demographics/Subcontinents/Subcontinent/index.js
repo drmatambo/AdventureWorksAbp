@@ -22,14 +22,23 @@ $(function () {
     var l = abp.localization.getResource('AdventureWorksAbp');
 
     var service = vumbaSoft.adventureWorksAbp.demographics.subcontinents.subcontinent;
-    var createModal = new abp.ModalManager(abp.appPath + 'Demographics/Subcontinents/Subcontinent/CreateModal');
-    var editModal = new abp.ModalManager(abp.appPath + 'Demographics/Subcontinents/Subcontinent/EditModal');
+    //var createModal2 = new abp.ModalManager(abp.appPath + 'Demographics/Subcontinents/Subcontinent/CreateModal');
+
+    var createModal = new abp.ModalManager({
+        viewUrl: abp.appPath + 'Demographics/Subcontinents/Subcontinent/CreateModal',
+        modalClass: 'CreateSubcontinentDdl'
+    });
+
+    var editModal = new abp.ModalManager({
+        viewUrl: abp.appPath + 'Demographics/Subcontinents/Subcontinent/EditModal',
+        modalClass: 'EditSubcontinentDdl'
+    });
 
     var dataTable = $('#SubcontinentTable').DataTable(abp.libs.datatables.normalizeConfiguration({
         processing: true,
         serverSide: true,
         paging: true,
-        searching: false,//disable default searchbox
+        searching: false, //disable default searchbox
         autoWidth: false,
         scrollCollapse: true,
         order: [[1, "asc"]],
@@ -73,7 +82,16 @@ $(function () {
             },
             {
                 title: l('SubcontinentPopulation'),
-                data: "population"
+                data: "population",
+                render: function (data) {
+                    var number = DataTable
+                        .render
+                        .number('.', ',')
+                        .display(data, {
+                            locale: abp.localization.currentCulture.name
+                        }).toLocaleString();
+                    return number;
+                }
             },
             {
                 title: l('SubcontinentRemarks'),

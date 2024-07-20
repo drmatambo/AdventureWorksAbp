@@ -17,7 +17,10 @@ public class SubcontinentRepository : EfCoreRepository<AdventureWorksAbpDbContex
     {
     }
 
-    public async Task<Subcontinent> FindByNameAsync(string name, bool includeDetails = true, CancellationToken cancellationToken = default)
+    public async Task<Subcontinent> FindByNameAsync(
+        string name, 
+        bool includeDetails = true, 
+        CancellationToken cancellationToken = default)
     {
         var dbSet = await GetDbSetAsync();
 
@@ -30,18 +33,34 @@ public class SubcontinentRepository : EfCoreRepository<AdventureWorksAbpDbContex
         int skipCount, 
         int maxResultCount, 
         string sorting,
-        string filter = null, 
+        string? filter = null, 
         bool includeDetails = false, 
         CancellationToken cancellationToken = default)
     {
         var dbSet = await GetDbSetAsync();
 
         return await dbSet.IncludeDetails(includeDetails)
-            .WhereIf(!filter.IsNullOrWhiteSpace(), subContinent => subContinent.Name.Contains(filter))
+            //.WhereIf(!filter.IsNullOrWhiteSpace(), subContinent => subContinent.Name.Contains(filter))
+            .WhereIf(!filter.IsNullOrWhiteSpace(),
+            subContinent => subContinent.ContinentId.ToString().Contains(filter))
             .OrderBy(sorting)
             .Skip(skipCount)
             .Take(maxResultCount)
             .ToListAsync(GetCancellationToken(cancellationToken));
+    }
+
+    public async Task<List<Subcontinent>> GetSubcontinentListByIdAsync(
+        Guid continentId, 
+        bool includeDetails = false, 
+        CancellationToken cancellationToken = default)
+    {
+        var dbSet = await GetDbSetAsync();
+
+        return await dbSet.IncludeDetails(includeDetails)
+            .WhereIf(continentId.ToString().IsNullOrWhiteSpace(), 
+            subContinent => subContinent.ContinentId.ToString().Contains(continentId.ToString()))
+            .ToListAsync(GetCancellationToken(cancellationToken));
+
     }
 
     //public async Task<List<Subcontinent>> GetListAsync(
@@ -74,6 +93,8 @@ public class SubcontinentRepository : EfCoreRepository<AdventureWorksAbpDbContex
             .WhereIf(!filter.Remarks.IsNullOrWhiteSpace(), subContinent => subContinent.Remarks.Contains(filter.Remarks))
             .ToListAsync()).Count;
     }
+
+
 
     public override async Task<IQueryable<Subcontinent>> WithDetailsAsync()
     {

@@ -22,8 +22,16 @@ $(function () {
     var l = abp.localization.getResource('AdventureWorksAbp');
 
     var service = vumbaSoft.adventureWorksAbp.demographics.localities.locality;
-    var createModal = new abp.ModalManager(abp.appPath + 'Demographics/Localities/Locality/CreateModal');
-    var editModal = new abp.ModalManager(abp.appPath + 'Demographics/Localities/Locality/EditModal');
+
+    var createModal = new abp.ModalManager({
+        viewUrl: abp.appPath + 'Demographics/Localities/Locality/CreateModal',
+        modalClass: 'CreateLocalityDdl'
+    });
+
+    var editModal = new abp.ModalManager({
+        viewUrl: abp.appPath + 'Demographics/Localities/Locality/EditModal',
+        modalClass: 'EditLocalityDdl'
+    });
 
     var dataTable = $('#LocalityTable').DataTable(abp.libs.datatables.normalizeConfiguration({
         processing: true,
@@ -93,7 +101,16 @@ $(function () {
             },
             {
                 title: l('LocalityPopulation'),
-                data: "population"
+                data: "population",
+                render: function (data) {
+                    var number = DataTable
+                        .render
+                        .number('.', ',')
+                        .display(data, {
+                            locale: abp.localization.currentCulture.name
+                        }).toLocaleString();
+                    return number;
+                }
             },
             {
                 title: l('LocalityDistrictCityCode'),
