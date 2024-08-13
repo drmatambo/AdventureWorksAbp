@@ -8,16 +8,16 @@ namespace VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.Subcontinents.Subco
 public class CreateSubcontinentViewModel
 {
     [SelectItems(nameof(CreateModalModel.Continents))]
-    [Display(Name = "SubcontinentName")]
+    [Display(Name = "Continent Name")]
     public Guid ContinentId { get; set; }
 
-    [Display(Name = "SubcontinentName")]
+    [Display(Name = "Subcontinent Name")]
     public String Name { get; set; }
 
-    [Display(Name = "SubcontinentPopulation")]
+    [Display(Name = "Subcontinent Population")]
     public Int64 Population { get; set; }
 
     [TextArea]
-    [Display(Name = "SubcontinentRemarks")]
+    [Display(Name = "Subcontinent Remarks")]
     public String Remarks { get; set; }
 }

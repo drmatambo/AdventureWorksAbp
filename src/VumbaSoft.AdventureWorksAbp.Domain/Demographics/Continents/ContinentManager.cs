@@ -18,9 +18,9 @@ public class ContinentManager : DomainService
     }
 
     public async Task<Continent> CreateAsync(
-    string name,
-    Int64 population,
-    String remarks)
+        string name,
+        Int64 population,
+        String remarks)
     {
         Check.NotNullOrWhiteSpace(name, nameof(name));
 

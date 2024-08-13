@@ -42,7 +42,7 @@ public class CreateModalModel : AdventureWorksAbpPageModel
 
         //var subContinentLookup = await _subcontinentService.GetListAsync(input:ViewModel);
 
-        //var subContinentLookup = await _countryService.GetSubContinentLookupAsync();
+        var subContinentLookup = await _countryService.GetSubContinentLookupAsync();
         CountrySubContinents = subContinentLookup.Items
             .OrderBy(y => y.Name)
             .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
