@@ -11,6 +11,7 @@ using System.Collections.Generic;//OrderBy
 using System.Linq.Dynamic.Core;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.ObjectMapping;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.StateProvinces;
 
@@ -168,5 +169,20 @@ public class StateProvinceAppService : CrudAppService<
         }
 
         return $"stateProvince.{sorting}";
+    }
+
+    [Authorize(AdventureWorksAbpPermissions.StateProvince.Update)]
+    public virtual async Task UpdateAsync(Guid id, UpdateStateProvinceDto input)
+    {
+        var stateprovince = await _stateProvinceRepository.GetAsync(id);
+
+        if (stateprovince.Name != input.Name) { }
+
+        stateprovince.Name = input.Name;
+        stateprovince.Population = input.Population;
+        stateprovince.Remarks = input.Remarks;
+
+        await _stateProvinceRepository.UpdateAsync(stateprovince);
+
     }
 }

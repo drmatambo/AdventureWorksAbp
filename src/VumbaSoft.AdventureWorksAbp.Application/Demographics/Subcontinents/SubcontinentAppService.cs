@@ -11,6 +11,11 @@ using Volo.Abp.Domain.Entities;
 using System.Collections.Generic;
 using Volo.Abp.ObjectMapping;
 using Volo.Abp.Domain.Repositories;
+using VumbaSoft.AdventureWorksAbp.Demographics.Countries;
+using System.Diagnostics.CodeAnalysis;
+using System.Collections;
+using VumbaSoft.AdventureWorksAbp.Demographics.Countries.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.Subcontinents;
@@ -33,9 +38,10 @@ public class SubcontinentAppService : CrudAppService<
 
     private readonly ISubcontinentRepository _subContinentRepository;
     private readonly IContinentRepository _continentRepository;
+    private readonly ICountryRepository _countryRepository;
 
     public SubcontinentAppService(
-        ISubcontinentRepository SubcontinentRepository, 
+        ISubcontinentRepository SubcontinentRepository,
         IContinentRepository continentRepository) : base(SubcontinentRepository)
     {
         _subContinentRepository = SubcontinentRepository;
@@ -58,14 +64,23 @@ public class SubcontinentAppService : CrudAppService<
         //Get the IQueryable<Subcontinent> from the repository
         var queryable = await Repository.GetQueryableAsync();
 
+        //Get the IQueryable<Coutries> from the repository 
+        //var countriesQueriable  = await _countryRepository.GetQueryableAsync();
+
+        //var countryQuery = from country in countriesQueriable.Where(country => country.SubcontinentId == id) select country;
+
         //Prepare a query to join Subcontinents and Continents
         var query = from subcontinent in queryable
                     join continent in await _continentRepository.GetQueryableAsync() on subcontinent.ContinentId equals continent.Id
                     where subcontinent.Id == id
-                    select new { subcontinent, continent };
+                    select new { subcontinent, continent /*, subcontinent.Id*/ };
 
         //Execute the query and get the continents with subcontinents
         var queryResult = await AsyncExecuter.FirstOrDefaultAsync(query);
+
+
+        //Execute a query for retriving contries by subcontinents
+        //var countryQueryResult = await AsyncExecuter.ToListAsync(countryQuery);
 
         if (queryResult == null)
         {
@@ -74,8 +89,13 @@ public class SubcontinentAppService : CrudAppService<
 
         var subcontinentDto = ObjectMapper.Map<Subcontinent, SubcontinentDto>(queryResult.subcontinent);
 
+        //var countryColecctionDto = ObjectMapper.Map<Country, CountryDto>(countryQueryResult);
+
         subcontinentDto.ContinentName = queryResult.continent.Name;
-        subcontinentDto.Countries = new();
+        subcontinentDto.Id = queryResult.subcontinent.Id;
+        //subcontinentDto.Countries = countryQueryResult;
+        //subcontinentDto.Countries = new();
+        //subcontinentDto.Countries = await AsyncExecuter.ToListAsync(countryQuery);
 
         return subcontinentDto;
     }
@@ -108,8 +128,7 @@ public class SubcontinentAppService : CrudAppService<
             .Take(input.MaxResultCount);
 
         //Execute the query and get a list
-        var queryResult = await AsyncExecuter.ToListAsync(
-            query);
+        var queryResult = await AsyncExecuter.ToListAsync(query);
 
         //Convert the query result to a list of subcontinentDto objects
         var subcontinentDtos = queryResult.Select(x =>
@@ -117,6 +136,7 @@ public class SubcontinentAppService : CrudAppService<
             var subcontinentDto = ObjectMapper.Map<Subcontinent, SubcontinentDto>(x.Subcontinent);
             subcontinentDto.ContinentName = x.Continent.Name;
             //TODO: Pending masterdetail implementation
+            //subcontinentDto.Countries = new();
             subcontinentDto.Countries = new();
             return subcontinentDto;
         }).ToList();
@@ -127,13 +147,13 @@ public class SubcontinentAppService : CrudAppService<
         return new PagedResultDto<SubcontinentDto>(totalCount, subcontinentDtos);
     }
 
-    public async Task<ListResultDto<ContinentLookUpDto>> GetContinentLookupAsync()
+    public virtual async Task<ListResultDto<ContinentLookUpDto>> GetContinentLookupAsync()
     {
         var continents = await _continentRepository.GetListAsync();
         return new ListResultDto<ContinentLookUpDto>(ObjectMapper.Map<List<Continent>, List<ContinentLookUpDto>>(continents));
     }
 
-    public async Task<ListResultDto<SubcontinentLookUpDto>> GetSubContinentLookupAsync()
+    public virtual async Task<ListResultDto<SubcontinentLookUpDto>> GetSubContinentLookupAsync()
     {
         var subContinents = await _subContinentRepository.GetListAsync();
         return new ListResultDto<SubcontinentLookUpDto>(ObjectMapper.Map<List<Subcontinent>, List<SubcontinentLookUpDto>>(subContinents));
@@ -157,4 +177,25 @@ public class SubcontinentAppService : CrudAppService<
 
         return $"subcontinent.{sorting}";
     }
+
+    public virtual async Task<SubcontinentDto> FindByNameAsync(string name)
+    {
+        var subcontinent = await _subContinentRepository.FindByNameAsync(name);
+        return ObjectMapper.Map<Subcontinent, SubcontinentDto>(subcontinent);
+    }
+
+    [Authorize(AdventureWorksAbpPermissions.Subcontinent.Update)]
+    public virtual async Task UpdateAsync(Guid id, UpdateSubcontinentDto input)
+    {
+        var subcontinent = await _subContinentRepository.GetAsync(id);
+        if (subcontinent.Name != input.Name) { }
+
+        subcontinent.Name = input.Name;
+        subcontinent.Population = input.Population;
+        subcontinent.Remarks = input.Remarks;
+
+        await _subContinentRepository.UpdateAsync(subcontinent);
+    }
+
+
 }

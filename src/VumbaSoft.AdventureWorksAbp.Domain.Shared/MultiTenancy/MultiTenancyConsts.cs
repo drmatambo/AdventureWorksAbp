@@ -9,6 +9,7 @@ public static class MultiTenancyConsts
     public const bool IsEnabled = true;
 
     public const string LocalityId = "LocalityId";
+    public const string CompanyId = "CompanyId";
     public const string Host = "Host";
     public const string TenantConnectionString = "TenantConnectionString";
     public const string IsInTrial = "IsInTrial";

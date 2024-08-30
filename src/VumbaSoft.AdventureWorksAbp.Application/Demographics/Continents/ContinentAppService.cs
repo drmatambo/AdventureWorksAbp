@@ -43,6 +43,11 @@ public class ContinentAppService : CrudAppService<Continent, ContinentDto, Guid,
 
     public override async Task<ContinentDto> GetAsync(Guid id)
     {
+        //var queryable = await _continentRepository.WithDetailsAsync(x => x.Subcontinents);
+        //var query = queryable.Where(x => x.Id == id);
+        //var continent = await AsyncExecuter.FirstOrDefaultAsync(query);
+
+
         var continent = await _continentRepository.GetAsync(id);
         return ObjectMapper.Map<Continent, ContinentDto>(continent);
     }
@@ -59,7 +64,7 @@ public class ContinentAppService : CrudAppService<Continent, ContinentDto, Guid,
             input.MaxResultCount,
             input.Sorting,
             input.Name
-            );
+        );
 
         var totalCount = input.Name == null
             ? await _continentRepository.CountAsync()

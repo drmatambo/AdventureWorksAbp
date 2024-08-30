@@ -43,7 +43,7 @@ public class EditModalModel : AdventureWorksAbpPageModel
     public virtual async Task<IActionResult> OnPostAsync()
     {
         var dto = ObjectMapper.Map<EditSubcontinentViewModel, UpdateSubcontinentDto>(ViewModel);
-        await _service.UpdateAsync(Id, dto);
+        await _service.UpdateAsync(ViewModel.Id, dto);
         return NoContent();
     }
 }

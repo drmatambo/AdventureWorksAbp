@@ -16,7 +16,9 @@ public interface ISubcontinentAppService :
         UpdateSubcontinentDto>
 {
     Task<SubcontinentDto> GetAsync(Guid id);
+    Task<SubcontinentDto> FindByNameAsync(string name);
     Task<PagedResultDto<SubcontinentDto>> GetListAsync(SubcontinentGetListInput input);
+    Task UpdateAsync(Guid id, UpdateSubcontinentDto input);
 
     Task<ListResultDto<ContinentLookUpDto>> GetContinentLookupAsync();
     Task<ListResultDto<SubcontinentLookUpDto>> GetSubContinentLookupAsync();

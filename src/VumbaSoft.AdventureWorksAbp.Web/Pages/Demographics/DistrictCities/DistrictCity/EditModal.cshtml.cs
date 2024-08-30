@@ -47,14 +47,12 @@ public class EditModalModel : AdventureWorksAbpPageModel
         //    .OrderBy(y => y.Name)
         //    .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
         //    .ToList();
-
-
     }
 
     public virtual async Task<IActionResult> OnPostAsync()
     {
         var dto = ObjectMapper.Map<EditDistrictCityViewModel, UpdateDistrictCityDto>(ViewModel);
-        await _service.UpdateAsync(Id, dto);
+        await _service.UpdateAsync(ViewModel.Id, dto);
         return NoContent();
     }
 }

@@ -19,6 +19,8 @@ public interface IRegionAppService :
 
     Task<PagedResultDto<RegionDto>> GetListAsync(RegionGetListInput input);
 
+    Task UpdateAsync(Guid id, UpdateRegionDto input);
+
     Task<ListResultDto<RegionContinentLookUpDto>> GetRegionContinentLookupAsync();
 
     Task<ListResultDto<RegionSubcontinentLookUpDto>> GetRegionSubContinentLookupAsync();

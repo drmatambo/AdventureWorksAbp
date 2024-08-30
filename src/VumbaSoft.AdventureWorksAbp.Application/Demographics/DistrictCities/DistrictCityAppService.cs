@@ -10,6 +10,7 @@ using VumbaSoft.AdventureWorksAbp.Demographics.Countries;
 using VumbaSoft.AdventureWorksAbp.Demographics.StateProvinces;
 using Volo.Abp.Domain.Entities;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.DistrictCities;
 
@@ -172,5 +173,19 @@ public class DistrictCityAppService : CrudAppService<
         }
 
         return $"districtCity.{sorting}";
+    }
+
+
+    [Authorize(AdventureWorksAbpPermissions.DistrictCity.Update)]
+    public virtual async Task UpdateAsync(Guid id, UpdateDistrictCityDto input)
+    {
+        var districtcity = await _districtCityRepository.GetAsync(id);
+        if (districtcity.Name != input.Name) { }
+
+        districtcity.Name = input.Name;
+        districtcity.Population = input.Population;
+        districtcity.Remarks = input.Remarks;
+
+        await _districtCityRepository.UpdateAsync(districtcity);
     }
 }

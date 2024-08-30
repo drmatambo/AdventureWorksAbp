@@ -26,21 +26,27 @@ public class AdventureWorksAbpApplicationAutoMapperProfile : Profile
         CreateMap<Continent, ContinentDto>();
         CreateMap<CreateContinentDto, Continent>(MemberList.Source);
         CreateMap<UpdateContinentDto, Continent>(MemberList.Source);
+
         CreateMap<Subcontinent, SubcontinentDto>();
         CreateMap<CreateSubcontinentDto, Subcontinent>(MemberList.Source);
         CreateMap<UpdateSubcontinentDto, Subcontinent>(MemberList.Source);
+
         CreateMap<Country, CountryDto>();
         CreateMap<CreateCountryDto, Country>(MemberList.Source);
         CreateMap<UpdateCountryDto, Country>(MemberList.Source);
+
         CreateMap<Region, RegionDto>();
         CreateMap<CreateRegionDto, Region>(MemberList.Source);
         CreateMap<UpdateRegionDto, Region>(MemberList.Source);
+
         CreateMap<StateProvince, StateProvinceDto>();
         CreateMap<CreateStateProvinceDto, StateProvince>(MemberList.Source);
         CreateMap<UpdateStateProvinceDto, StateProvince>(MemberList.Source);
+
         CreateMap<DistrictCity, DistrictCityDto>();
         CreateMap<CreateDistrictCityDto, DistrictCity>(MemberList.Source);
         CreateMap<UpdateDistrictCityDto, DistrictCity>(MemberList.Source);
+
         CreateMap<Locality, LocalityDto>();
         CreateMap<CreateLocalityDto, Locality>(MemberList.Source);
         CreateMap<UpdateLocalityDto, Locality>(MemberList.Source);

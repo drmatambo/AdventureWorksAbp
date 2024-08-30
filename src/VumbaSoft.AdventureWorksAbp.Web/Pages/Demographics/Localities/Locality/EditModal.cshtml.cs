@@ -18,6 +18,7 @@ public class EditModalModel : AdventureWorksAbpPageModel
 
     [BindProperty]
     public EditLocalityViewModel ViewModel { get; set; }
+
     public List<SelectListItem> Continents { get; set; }
     public List<SelectListItem> SubContinents { get; set; }
     public List<SelectListItem> Countries { get; set; }
@@ -78,7 +79,7 @@ public class EditModalModel : AdventureWorksAbpPageModel
     public virtual async Task<IActionResult> OnPostAsync()
     {
         var dto = ObjectMapper.Map<EditLocalityViewModel, UpdateLocalityDto>(ViewModel);
-        await _service.UpdateAsync(Id, dto);
+        await _service.UpdateAsync(ViewModel.Id, dto);
         return NoContent();
     }
 }

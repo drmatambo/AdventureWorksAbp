@@ -24,21 +24,27 @@ public class AdventureWorksAbpWebAutoMapperProfile : Profile
         CreateMap<ContinentDto, EditContinentViewModel>();
         CreateMap<CreateContinentViewModel, CreateContinentDto>();
         CreateMap<EditContinentViewModel, UpdateContinentDto>();
+
         CreateMap<SubcontinentDto, EditSubcontinentViewModel>();
         CreateMap<CreateSubcontinentViewModel, CreateSubcontinentDto>();
         CreateMap<EditSubcontinentViewModel, UpdateSubcontinentDto>();
+
         CreateMap<CountryDto, EditCountryViewModel>();
         CreateMap<CreateCountryViewModel, CreateCountryDto>();
         CreateMap<EditCountryViewModel, UpdateCountryDto>();
+
         CreateMap<RegionDto, EditRegionViewModel>();
         CreateMap<CreateRegionViewModel, CreateRegionDto>();
         CreateMap<EditRegionViewModel, UpdateRegionDto>();
+
         CreateMap<StateProvinceDto, EditStateProvinceViewModel>();
         CreateMap<CreateStateProvinceViewModel, CreateStateProvinceDto>();
         CreateMap<EditStateProvinceViewModel, UpdateStateProvinceDto>();
+
         CreateMap<DistrictCityDto, EditDistrictCityViewModel>();
         CreateMap<CreateDistrictCityViewModel, CreateDistrictCityDto>();
         CreateMap<EditDistrictCityViewModel, UpdateDistrictCityDto>();
+
         CreateMap<LocalityDto, EditLocalityViewModel>();
         CreateMap<CreateLocalityViewModel, CreateLocalityDto>();
         CreateMap<EditLocalityViewModel, UpdateLocalityDto>();

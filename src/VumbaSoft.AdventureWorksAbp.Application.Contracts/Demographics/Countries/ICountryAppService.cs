@@ -23,4 +23,6 @@ public interface ICountryAppService :
     Task<CountryDto> GetAsync(Guid id);
 
     Task<PagedResultDto<CountryDto>> GetListAsync(CountryGetListInput input);
+
+    Task UpdateAsync(Guid id, UpdateCountryDto input);
 }

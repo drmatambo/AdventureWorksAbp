@@ -19,6 +19,8 @@ public interface ILocalityAppService :
 
     Task<PagedResultDto<LocalityDto>> GetListAsync(LocalityGetListInput input);
 
+    Task UpdateAsync(Guid id, UpdateLocalityDto input);
+
     Task<ListResultDto<LocalityContinentLookUpDto>> GetLocalityContinenteLookUpAsync();
 
     Task<ListResultDto<LocalitySubContinenteLookUpDto>> GetLocalitySubContinenteLookUpAsync();

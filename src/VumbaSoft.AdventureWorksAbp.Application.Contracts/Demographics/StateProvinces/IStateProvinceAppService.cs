@@ -20,6 +20,8 @@ public interface IStateProvinceAppService :
 
     Task<PagedResultDto<StateProvinceDto>> GetListAsync(StateProvinceGetListInput input);
 
+    Task UpdateAsync(Guid id, UpdateStateProvinceDto input);
+
     Task<ListResultDto<StateProvinceRegionLookUpDto>> GetStateProvinceRegionLookupAsync();
 
     Task<ListResultDto<StateProvinceCountryLookUpDto>> GetStateProvinceCountryLookupAsync();

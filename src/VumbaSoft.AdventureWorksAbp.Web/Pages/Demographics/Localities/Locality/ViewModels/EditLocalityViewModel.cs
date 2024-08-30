@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.DataAnnotations;
 using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
@@ -6,35 +7,43 @@ namespace VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.Localities.Locality
 
 public class EditLocalityViewModel
 {
-    //[DisabledInput]
+    [HiddenInput]
+    public Guid Id { get; set; }
+
+    [DisabledInput]
+    [HiddenInput]
     //[Display(Name = "LocalityContinentId")]
     //[SelectItems(nameof(EditModalModel.Continents))]
-    //public Guid ContinentId { get; set; }
+    public Guid ContinentId { get; set; }
 
-    //[DisabledInput]
+
     //[Display(Name = "LocalitySubcontinentId")]
     //[SelectItems(nameof(EditModalModel.SubContinents))]
     //public Guid SubcontinentId { get; set; }
 
-    //[DisabledInput]
+    [HiddenInput]
+    [DisabledInput]
     //[Display(Name = "LocalityCountryId")]
     //[SelectItems(nameof(EditModalModel.Countries))]
-    //public Guid CountryId { get; set; }
+    public Guid CountryId { get; set; }
 
-    //[DisabledInput]
+    [DisabledInput]
+    [HiddenInput]
     //[Display(Name = "LocalityRegionId")]
     //[SelectItems(nameof(EditModalModel.Regions))]
-    //public Guid RegionId { get; set; }
+    public Guid RegionId { get; set; }
 
-    //[DisabledInput]
+    [DisabledInput]
+    [HiddenInput]
     //[Display(Name = "LocalityStateProvinceId")]
     //[SelectItems(nameof(EditModalModel.StateProvinces))]
-    //public Guid StateProvinceId { get; set; }
+    public Guid StateProvinceId { get; set; }
 
-    //[DisabledInput]
+    [DisabledInput]
+    [HiddenInput]
     //[Display(Name = "LocalityDistrictCityId")]
     //[SelectItems(nameof(EditModalModel.DistrictCities))]
-    //public Guid DistrictCityId { get; set; }
+    public Guid DistrictCityId { get; set; }
 
     [DisabledInput]
     [Display(Name = "Continent Name")]

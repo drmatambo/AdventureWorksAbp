@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.DataAnnotations;
 using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
@@ -9,7 +10,12 @@ public class EditStateProvinceViewModel
     //[DisabledInput]
     //[Display(Name = "StateProvinceCountryId")]
     //[SelectItems(nameof(EditModalModel.StateProvinceCountries))]
-    //public Guid CountryId { get; set; }
+
+    [HiddenInput]
+    public Guid Id { get; set; }
+
+    [HiddenInput]
+    public Guid CountryId { get; set; }
 
     [DisabledInput]
     [Display(Name = "Country Name")]

@@ -13,7 +13,7 @@ public class Subcontinent : FullAuditedAggregateRoot<Guid>
     public virtual Guid ContinentId { get; set; }
     public virtual Int64 Population { get; set; }
     //public virtual Continent Continent { get; set; } //Navigation property
-    public virtual ICollection<Country> Countries { get; set; }
+    public virtual ICollection<Country> Countries { get; private set; }
     public virtual String Remarks { get; set; }
 
 

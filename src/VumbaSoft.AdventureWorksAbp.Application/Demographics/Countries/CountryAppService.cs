@@ -14,6 +14,7 @@ using Volo.Abp.ObjectMapping;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.Countries;
 
@@ -207,5 +208,18 @@ public class CountryAppService : CrudAppService<Country, CountryDto, Guid, Count
 
         return new ListResultDto<CountrySubcontinentLookUpDto>(
             ObjectMapper.Map<List<Subcontinent>, List<CountrySubcontinentLookUpDto>>(subContinents));
+    }
+
+    [Authorize(AdventureWorksAbpPermissions.Country.Update)]
+    public virtual async Task UpdateAsync(Guid id, UpdateCountryDto input)
+    {
+        var country = await _countryRepository.GetAsync(id);
+        if (country.Name != input.Name) { }
+
+        country.Name = input.Name;
+        country.Population = input.Population;
+        country.Remarks = input.Remarks;
+
+        await _countryRepository.UpdateAsync(country);
     }
 }

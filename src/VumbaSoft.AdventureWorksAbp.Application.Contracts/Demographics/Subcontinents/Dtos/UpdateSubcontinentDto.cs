@@ -5,6 +5,7 @@ namespace VumbaSoft.AdventureWorksAbp.Demographics.Subcontinents.Dtos;
 [Serializable]
 public class UpdateSubcontinentDto
 {
+    public Guid Id { get; set; }
     public String Name { get; set; }
 
     public Guid ContinentId { get; set; }

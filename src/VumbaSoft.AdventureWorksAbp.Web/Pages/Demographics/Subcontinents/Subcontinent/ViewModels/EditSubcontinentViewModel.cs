@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.DataAnnotations;
 using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
@@ -10,6 +11,10 @@ public class EditSubcontinentViewModel
     //[DisabledInput]
     //[Display(Name = "SubcontinentContinentId")]
     //public Guid ContinentId { get; set; }
+
+    //TODO: Added Id property
+    [HiddenInput]
+    public Guid Id { get; set; }
 
     [DisabledInput]
     [Display(Name = "Continent Name")]

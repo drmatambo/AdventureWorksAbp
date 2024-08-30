@@ -17,6 +17,7 @@ using Volo.Abp.Domain.Entities;
 using System.Collections.Generic;
 using Volo.Abp.ObjectMapping;
 using Volo.Abp.TextTemplating.VirtualFiles;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.Localities;
 
@@ -276,5 +277,19 @@ public class LocalityAppService : CrudAppService<Locality, LocalityDto, Guid, Lo
         }
 
         return $"locality.{sorting}";
+    }
+
+    [Authorize(AdventureWorksAbpPermissions.Locality.Update)]
+    public virtual async Task UpdateAsync(Guid id, UpdateLocalityDto input)
+    {
+        var locality = await _localityRepository.GetAsync(id);
+
+        if (locality.Name != input.Name) { }
+
+        locality.Name = input.Name;
+        locality.Population = input.Population;
+        locality.Remarks = input.Remarks;
+
+        await _localityRepository.UpdateAsync(locality);
     }
 }

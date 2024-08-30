@@ -7,7 +7,8 @@ using Volo.Abp.EntityFrameworkCore;
 using System.Threading;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;//*Link*
-using System.Linq.Dynamic.Core;//* OrderBy*
+using System.Linq.Dynamic.Core;
+using VumbaSoft.AdventureWorksAbp.Demographics.Subcontinents;//* OrderBy*
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.Continents;
 
@@ -48,4 +49,31 @@ public class ContinentRepository : EfCoreRepository<AdventureWorksAbpDbContext, 
     {
         return (await GetQueryableAsync()).IncludeDetails();
     }
+
+    private async Task<IQueryable<ContinentWithDetails>> ApplyFilterAsync()
+    {
+        var dbContext = await GetDbContextAsync();
+        var query = (await GetDbSetAsync()).Include(sc => dbContext.Set<Subcontinent>())
+            .Join(dbContext.Set<Subcontinent>(), continent => continent.Id, subcontinent => subcontinent.ContinentId, 
+            (continent, subcontinent) => new { continent, subcontinent })
+            .Select(x => new ContinentWithDetails {
+                //Id = .,
+                Id = x.continent.Id,
+                Name = x.continent.Name,
+                Population = x.continent.Population,
+                Remarks = x.continent.Remarks,
+                //Subcontinents = GetListAsync(),
+                //Subcontinents = dbContext.Set<Subcontinent>().Where(continent => continent.Id == x.continent.Id).ToList(),
+                //Subcontinents = dbContext.Set<Subcontinent>().Where(subContinent => subContinent.Id == x.continent.Id).ToList(),
+
+
+
+            });
+
+        return query;
+
+        //return (await GetDbSetAsync()).Include(x => x.Subcontinents)
+        //    .Join(dbContext.Set<Continent>(), continent => continent.Id, subcontinent => subcontinent.)
+    }
+
 }

@@ -8,6 +8,7 @@ using Volo.Abp.EntityFrameworkCore;
 using System.Threading;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.Subcontinents;
 
@@ -24,15 +25,15 @@ public class SubcontinentRepository : EfCoreRepository<AdventureWorksAbpDbContex
     {
         var dbSet = await GetDbSetAsync();
 
-        return await dbSet.IncludeDetails(includeDetails)
-            .OrderBy(x => x.Name)
+        return await dbSet.IncludeDetails(includeDetails)/*.OrderBy(x => x.Name)*/
             .FirstOrDefaultAsync(subContinent => subContinent.Name == name, GetCancellationToken(cancellationToken));
     }
 
     public async Task<List<Subcontinent>> GetListAsync(
-        int skipCount, 
-        int maxResultCount, 
-        string sorting,
+        //TODO: Made nulable arguments
+        int skipCount = 0, 
+        int maxResultCount = 100, 
+        string sorting = nameof(Subcontinent.Name),
         string? filter = null, 
         bool includeDetails = false, 
         CancellationToken cancellationToken = default)
@@ -57,7 +58,7 @@ public class SubcontinentRepository : EfCoreRepository<AdventureWorksAbpDbContex
         var dbSet = await GetDbSetAsync();
 
         return await dbSet.IncludeDetails(includeDetails)
-            .WhereIf(continentId.ToString().IsNullOrWhiteSpace(), 
+            .WhereIf(!continentId.ToString().IsNullOrWhiteSpace(), 
             subContinent => subContinent.ContinentId.ToString().Contains(continentId.ToString()))
             .ToListAsync(GetCancellationToken(cancellationToken));
 
