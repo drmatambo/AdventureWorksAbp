@@ -14,6 +14,9 @@ public class CreateModalModel : AdventureWorksAbpPageModel
 {
     [BindProperty]
     public CreateStateProvinceViewModel ViewModel { get; set; }
+
+    public List<SelectListItem> StateProvinceContinents { get; set; }
+    public List<SelectListItem> StateProvinceSubcontinents { get; set; }
     public List<SelectListItem> StateProvinceRegions { get; set; }
     public List<SelectListItem> StateProvinceCountries { get; set; }
 
@@ -28,6 +31,21 @@ public class CreateModalModel : AdventureWorksAbpPageModel
     {
         ViewModel = new CreateStateProvinceViewModel();
 
+        var ContinentLookUp = await _service.GetStateProvinceContinentLookupAsync();
+        
+        StateProvinceContinents = ContinentLookUp.Items
+            .OrderBy(x => x.Name)
+            .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
+            .ToList();
+
+        var SubcontinentLookUp = await _service.GetStateProvinceSubcontinentLookupAsync();
+        
+        StateProvinceSubcontinents = SubcontinentLookUp.Items
+            .OrderBy(x => x.Name)
+            .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
+            .ToList();
+
+
         var CountryLookUp = await _service.GetStateProvinceCountryLookupAsync();
         
         StateProvinceCountries = CountryLookUp.Items
@@ -41,7 +59,6 @@ public class CreateModalModel : AdventureWorksAbpPageModel
             .OrderBy(y => y.Name)
             .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
             .ToList();
-
     }
 
     public virtual async Task<IActionResult> OnPostAsync()

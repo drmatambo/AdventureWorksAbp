@@ -13,8 +13,12 @@ public class CreateModalModel : AdventureWorksAbpPageModel
 {
     [BindProperty]
     public CreateDistrictCityViewModel ViewModel { get; set; }
-    public List<SelectListItem> Provinces { get; set; }
-    public List<SelectListItem> Countries { get; set; }
+
+    public List<SelectListItem> DistrictCityContinents { get; set; }
+    public List<SelectListItem> DistrictCitySubcontinents { get; set; }
+    public List<SelectListItem> DistrictCityCountries { get; set; }
+    public List<SelectListItem> DistrictCityRegions { get; set; }
+    public List<SelectListItem> DistrictCityStateProvinces { get; set; }
 
     private readonly IDistrictCityAppService _service;
 
@@ -27,14 +31,31 @@ public class CreateModalModel : AdventureWorksAbpPageModel
     {
         ViewModel = new CreateDistrictCityViewModel();
 
-        var provinceLookUp = await _service.GetDistrictCityStateProvinceLookupAsync();
-        Provinces = provinceLookUp.Items
+        var continentLookUp = await _service.GetDistrictCityContinentLookupAsync();
+        DistrictCityContinents = continentLookUp.Items
+            .OrderBy(x => x.Name)
+            .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
+            .ToList();
+
+        var subcontinentLooUp = await _service.GetDistrictCitySubcontinentLookupAsync();
+        DistrictCitySubcontinents = subcontinentLooUp.Items
+            .OrderBy(x => x.Name)
+            .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
+            .ToList();  
+
+        var countryLookUp = await _service.GetDistrictCityCountryLookupAsync();
+        DistrictCityCountries = countryLookUp.Items
             .OrderBy(y => y.Name)
             .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
             .ToList();
 
-        var countriesLookUp = await _service.GetDistrictCityCountryLookupAsync();
-        Countries = countriesLookUp.Items
+        var regionLookUp = await _service.GetDistrictCityRegionLookupAsync();
+        DistrictCityRegions = regionLookUp.Items
+            .OrderBy(x => x.Name)
+            .Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList();
+
+        var ProvinceLookUp = await _service.GetDistrictCityStateProvinceLookupAsync();
+        DistrictCityStateProvinces = ProvinceLookUp.Items
             .OrderBy(y => y.Name)
             .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
             .ToList();

@@ -6,12 +6,25 @@ namespace VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.DistrictCities.Dist
 
 public class CreateDistrictCityViewModel
 {
+
+    [SelectItems(nameof(CreateModalModel.DistrictCityContinents))]
+    [Display(Name = "Continent")]
+    public Guid ContinentId { get; set; }
+
+    [SelectItems(nameof(CreateModalModel.DistrictCitySubcontinents))]
+    [Display(Name = "Sbcontinent")]
+    public Guid SubContinentId { get; set; }
+
     [Display(Name = "DistrictCityCountryId")]
-    [SelectItems(nameof(CreateModalModel.Countries))]
+    [SelectItems(nameof(CreateModalModel.DistrictCityCountries))]
     public Guid CountryId { get; set; }
 
+    [Display(Name = "StateProvinceRegionId")]
+    [SelectItems(nameof(CreateModalModel.DistrictCityRegions))]
+    public Guid RegionId { get; set; }
+
     [Display(Name = "DistrictCityStateProvinceId")]
-    [SelectItems(nameof(CreateModalModel.Provinces))]
+    [SelectItems(nameof(CreateModalModel.DistrictCityStateProvinces))]
     public Guid StateProvinceId { get; set; }
 
     [Display(Name = "DistrictCityName")]

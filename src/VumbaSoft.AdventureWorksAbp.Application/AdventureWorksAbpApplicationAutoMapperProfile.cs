@@ -74,11 +74,16 @@ public class AdventureWorksAbpApplicationAutoMapperProfile : Profile
         CreateMap<Country, RegionCountryLookUpDto>();
 
         //StateProvince;
+        CreateMap<Continent, StateProvinceContinentLookUpDto>();
+        CreateMap<Subcontinent, StateProvinceSubcontinentLookUpDto>();
         CreateMap<Country, StateProvinceCountryLookUpDto>();
         CreateMap<Region, StateProvinceRegionLookUpDto>();
 
         //DistrictCity
+        CreateMap<Continent, DistrictCityContinentLookUpDto>();
+        CreateMap<Subcontinent, DistrictCitySubcontinentLookUpDto>();
         CreateMap<Country, DistrictCityCountryLookUpDto>();
+        CreateMap<Region, DistrictCityRegionLookUpDto>();
         CreateMap<StateProvince, DistrictCityStateProvinceLookUpDto>();
 
         //Locality

@@ -6,17 +6,25 @@ namespace VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.Regions.Region.View
 
 public class CreateRegionViewModel
 {
+    [SelectItems(nameof(CreateModalModel.RegionContinents))]
+    [Display(Name = "Continent")]
+    public Guid ContinentId { get; set; }
+
+    [SelectItems(nameof(CreateModalModel.RegionSubContinents))]
+    [Display(Name = "Sbcontinent")]
+    public Guid SubContinentId { get; set; }
+
     [SelectItems(nameof(CreateModalModel.RegionCountries))]
-    [Display(Name = "RegionCountryId")]
+    [Display(Name = "Country")]
     public Guid CountryId { get; set; }
 
-    [Display(Name = "RegionName")]
+    [Display(Name = "Region Name")]
     public String Name { get; set; }
 
-    [Display(Name = "RegionPopulation")]
+    [Display(Name = "Population")]
     public Int64 Population { get; set; }
 
-    [Display(Name = "RegionCountryCode")]
+    [Display(Name = "Country Code")]
     public String CountryCode { get; set; }
 
     [Display(Name = "RegionRegionCode")]

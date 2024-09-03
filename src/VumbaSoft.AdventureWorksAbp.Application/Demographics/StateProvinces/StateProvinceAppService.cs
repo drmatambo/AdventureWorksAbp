@@ -12,6 +12,8 @@ using System.Linq.Dynamic.Core;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.ObjectMapping;
 using Microsoft.AspNetCore.Authorization;
+using VumbaSoft.AdventureWorksAbp.Demographics.Continents;
+using VumbaSoft.AdventureWorksAbp.Demographics.Subcontinents;
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.StateProvinces;
 
@@ -31,18 +33,28 @@ public class StateProvinceAppService : CrudAppService<
     protected override string UpdatePolicyName { get; set; } = AdventureWorksAbpPermissions.StateProvince.Update;
     protected override string DeletePolicyName { get; set; } = AdventureWorksAbpPermissions.StateProvince.Delete;
 
-    private readonly IStateProvinceRepository _stateProvinceRepository;
+
+
+    private readonly IContinentRepository _continentRepository;
+    private readonly ISubcontinentRepository _subcontinentRepository;
     private readonly ICountryRepository _countryRepository;
     private readonly IRegionRepository _rerionRepository;
+    private readonly IStateProvinceRepository _stateProvinceRepository;
+
+
 
     public StateProvinceAppService(
-        IStateProvinceRepository stateProvinceRepository, 
-        ICountryRepository countryRepository, 
-        IRegionRepository rerionRepository) : base(stateProvinceRepository)
+        IStateProvinceRepository stateProvinceRepository,
+        ICountryRepository countryRepository,
+        IRegionRepository rerionRepository,
+        IContinentRepository continentRepository,
+        ISubcontinentRepository subcontinentRepository) : base(stateProvinceRepository)
     {
         _stateProvinceRepository = stateProvinceRepository;
         _countryRepository = countryRepository;
         _rerionRepository = rerionRepository;
+        _continentRepository = continentRepository;
+        _subcontinentRepository = subcontinentRepository;
     }
 
     protected override async Task<IQueryable<StateProvince>> CreateFilteredQueryAsync(StateProvinceGetListInput input)
@@ -131,16 +143,32 @@ public class StateProvinceAppService : CrudAppService<
         return new PagedResultDto<StateProvinceDto>(totalCount, stateProvinceDtos);
     }
 
+    public async Task<ListResultDto<StateProvinceContinentLookUpDto>> GetStateProvinceContinentLookupAsync()
+    {
+        var continents = await _continentRepository.GetListAsync();
+        return new ListResultDto<StateProvinceContinentLookUpDto>(
+            ObjectMapper.Map<List<Continent>, List<StateProvinceContinentLookUpDto>>(continents));
+    }
+
+    public async Task<ListResultDto<StateProvinceSubcontinentLookUpDto>> GetStateProvinceSubcontinentLookupAsync()
+    {
+        var subcontinents = await _subcontinentRepository.GetListAsync();
+        return new ListResultDto<StateProvinceSubcontinentLookUpDto>(
+            ObjectMapper.Map<List<Subcontinent>, List<StateProvinceSubcontinentLookUpDto>>(subcontinents));
+    }
+
     public async Task<ListResultDto<StateProvinceRegionLookUpDto>> GetStateProvinceRegionLookupAsync()
     {
         var regions = await _rerionRepository.GetListAsync();
-        return new ListResultDto<StateProvinceRegionLookUpDto>(ObjectMapper.Map<List<Region>, List<StateProvinceRegionLookUpDto>>(regions));
+        return new ListResultDto<StateProvinceRegionLookUpDto>(
+            ObjectMapper.Map<List<Region>, List<StateProvinceRegionLookUpDto>>(regions));
     }
 
     public async Task<ListResultDto<StateProvinceCountryLookUpDto>> GetStateProvinceCountryLookupAsync()
     {
         var countries = await _countryRepository.GetListAsync();
-        return new ListResultDto<StateProvinceCountryLookUpDto>(ObjectMapper.Map<List<Country>, List<StateProvinceCountryLookUpDto>>(countries));
+        return new ListResultDto<StateProvinceCountryLookUpDto>(
+            ObjectMapper.Map<List<Country>, List<StateProvinceCountryLookUpDto>>(countries));
     }
 
     private static string NormalizeSorting(string sorting)
@@ -183,6 +211,5 @@ public class StateProvinceAppService : CrudAppService<
         stateprovince.Remarks = input.Remarks;
 
         await _stateProvinceRepository.UpdateAsync(stateprovince);
-
     }
 }

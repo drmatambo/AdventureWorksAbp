@@ -14,6 +14,8 @@ public class CreateModalModel : AdventureWorksAbpPageModel
     [BindProperty]
     public CreateRegionViewModel ViewModel { get; set; }
 
+    public List<SelectListItem> RegionContinents { get; set; }
+    public List<SelectListItem> RegionSubContinents { get; set; }
     public List<SelectListItem> RegionCountries { get; set; }
 
     private readonly IRegionAppService _service;
@@ -27,6 +29,22 @@ public class CreateModalModel : AdventureWorksAbpPageModel
     {
         ViewModel = new CreateRegionViewModel();
 
+        //Continent Look List
+        var ContinentLookUp = await _service.GetRegionContinentLookupAsync();
+        RegionContinents = ContinentLookUp.Items
+            .OrderBy(x => x.Name)
+            .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
+            .ToList();
+
+        // Subcontinent Lookup List
+        var SubContinentLookUp = await _service.GetRegionSubContinentLookupAsync();
+        RegionSubContinents = SubContinentLookUp.Items
+            .OrderBy(x => x.Name)
+            .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
+            .ToList();
+
+
+        // Country Lookup List
         var CountryLookUp = await _service.GetRegionCountryLookupAsync();
         RegionCountries = CountryLookUp.Items
             .OrderBy(y => y.Name)

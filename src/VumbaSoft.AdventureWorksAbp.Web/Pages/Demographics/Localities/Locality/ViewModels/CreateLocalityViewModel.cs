@@ -12,7 +12,7 @@ public class CreateLocalityViewModel
 
     [Display(Name = "LocalitySubcontinentId")]
     [SelectItems(nameof(CreateModalModel.SubContinents))]
-    public Guid SubcontinentId { get; set; }
+    public Guid SubContinentId { get; set; }
         
     [Display(Name = "LocalityCountryId")]
     [SelectItems(nameof(CreateModalModel.Countries))]

@@ -47,7 +47,7 @@
                             var newOption = new Option(item.name, item.id, false, false)
                             $subcontinentDdl.append(newOption)//.trigger('change');
 
-                            console.log('SubContinentId: ' + item.id + '} -- {SubContinenteName: ' + item.name + '}')
+                            //console.log('SubContinentId: ' + item.id + '} -- {SubContinenteName: ' + item.name + '}')
                         });
                     }
                 });
@@ -67,11 +67,9 @@
             logSelection();
         });
 
-        logSelection();
+        //logSelection();
 
-        //Emptis the subcontinent Combobox and insert the placehold
-
-        
+       
         function logSelection() {
             console.log('initialized the modal...  {' + $continentDdl.val() + '} -- {' + $subcontinentDdl.val() + '}');
         };

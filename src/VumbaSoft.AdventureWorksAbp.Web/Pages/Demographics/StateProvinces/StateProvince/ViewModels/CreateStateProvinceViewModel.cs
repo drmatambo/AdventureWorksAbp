@@ -6,6 +6,14 @@ namespace VumbaSoft.AdventureWorksAbp.Web.Pages.Demographics.StateProvinces.Stat
 
 public class CreateStateProvinceViewModel
 {
+    [SelectItems(nameof(CreateModalModel.StateProvinceContinents))]
+    [Display(Name = "Continent")]
+    public Guid ContinentId { get; set; }
+
+    [SelectItems(nameof(CreateModalModel.StateProvinceSubcontinents))]
+    [Display(Name = "Sbcontinent")]
+    public Guid SubContinentId { get; set; }
+
     [Display(Name = "StateProvinceCountryId")]
     [SelectItems(nameof(CreateModalModel.StateProvinceCountries))]
     public Guid CountryId { get; set; }

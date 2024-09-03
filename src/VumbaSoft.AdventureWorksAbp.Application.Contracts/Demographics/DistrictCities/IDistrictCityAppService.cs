@@ -21,7 +21,10 @@ public interface IDistrictCityAppService :
 
     Task UpdateAsync(Guid id, UpdateDistrictCityDto input);
 
-    Task<ListResultDto<DistrictCityStateProvinceLookUpDto>> GetDistrictCityStateProvinceLookupAsync();
 
+    Task<ListResultDto<DistrictCityContinentLookUpDto>> GetDistrictCityContinentLookupAsync();
+    Task<ListResultDto<DistrictCitySubcontinentLookUpDto>> GetDistrictCitySubcontinentLookupAsync();
     Task<ListResultDto<DistrictCityCountryLookUpDto>> GetDistrictCityCountryLookupAsync();
+    Task<ListResultDto<DistrictCityRegionLookUpDto>> GetDistrictCityRegionLookupAsync();
+    Task<ListResultDto<DistrictCityStateProvinceLookUpDto>> GetDistrictCityStateProvinceLookupAsync();
 }

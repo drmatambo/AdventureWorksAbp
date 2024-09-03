@@ -11,6 +11,9 @@ using VumbaSoft.AdventureWorksAbp.Demographics.StateProvinces;
 using Volo.Abp.Domain.Entities;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using VumbaSoft.AdventureWorksAbp.Demographics.Continents;
+using VumbaSoft.AdventureWorksAbp.Demographics.Subcontinents;
+using VumbaSoft.AdventureWorksAbp.Demographics.Regions;
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.DistrictCities;
 
@@ -30,18 +33,29 @@ public class DistrictCityAppService : CrudAppService<
     protected override string UpdatePolicyName { get; set; } = AdventureWorksAbpPermissions.DistrictCity.Update;
     protected override string DeletePolicyName { get; set; } = AdventureWorksAbpPermissions.DistrictCity.Delete;
 
-    private readonly IDistrictCityRepository _districtCityRepository;
-    private readonly IStateProvinceRepository _stateProvinceRepository;
+
+    private readonly IContinentRepository _continentRepository;
+    private readonly ISubcontinentRepository _subcontinentRepository;
     private readonly ICountryRepository _countryRepository;
+    private readonly IRegionRepository _regionRepository;
+    private readonly IStateProvinceRepository _stateProvinceRepository;
+    private readonly IDistrictCityRepository _districtCityRepository;
+
 
     public DistrictCityAppService(
-        IDistrictCityRepository districtCityRepository, 
-        ICountryRepository countryRepository, 
-        IStateProvinceRepository stateProvinceRepository) : base(districtCityRepository)
+        IDistrictCityRepository districtCityRepository,
+        ICountryRepository countryRepository,
+        IStateProvinceRepository stateProvinceRepository,
+        IContinentRepository continentRepository,
+        ISubcontinentRepository subcontinentRepository,
+        IRegionRepository regionRepository) : base(districtCityRepository)
     {
         _districtCityRepository = districtCityRepository;
         _countryRepository = countryRepository;
         _stateProvinceRepository = stateProvinceRepository;
+        _continentRepository = continentRepository;
+        _subcontinentRepository = subcontinentRepository;
+        _regionRepository = regionRepository;
     }
 
     protected override async Task<IQueryable<DistrictCity>> CreateFilteredQueryAsync(DistrictCityGetListInput input)
@@ -133,18 +147,39 @@ public class DistrictCityAppService : CrudAppService<
 
         return new PagedResultDto<DistrictCityDto>(totalCount, districtCityDtos);
     }
+    public async Task<ListResultDto<DistrictCityContinentLookUpDto>> GetDistrictCityContinentLookupAsync()
+    {
+        var continents = await _continentRepository.GetListAsync();
+        return new ListResultDto<DistrictCityContinentLookUpDto>(
+            ObjectMapper.Map<List<Continent>, List<DistrictCityContinentLookUpDto>>(continents));
+    }
+
+    public async Task<ListResultDto<DistrictCitySubcontinentLookUpDto>> GetDistrictCitySubcontinentLookupAsync()
+    {
+        var subcontinents = await _subcontinentRepository.GetListAsync();
+        return new ListResultDto<DistrictCitySubcontinentLookUpDto>(
+            ObjectMapper.Map<List<Subcontinent>, List<DistrictCitySubcontinentLookUpDto>>(subcontinents));
+    }
+
+    public async Task<ListResultDto<DistrictCityCountryLookUpDto>> GetDistrictCityCountryLookupAsync()
+    {
+        var countries = await _countryRepository.GetListAsync();
+        return new ListResultDto<DistrictCityCountryLookUpDto>(
+            ObjectMapper.Map<List<Country>, List<DistrictCityCountryLookUpDto>>(countries));
+    }
+
+    public async Task<ListResultDto<DistrictCityRegionLookUpDto>> GetDistrictCityRegionLookupAsync()
+    {
+        var regions = await _regionRepository.GetListAsync();
+        return new ListResultDto<DistrictCityRegionLookUpDto>(
+            ObjectMapper.Map<List<Region>, List<DistrictCityRegionLookUpDto>>(regions));
+    }
 
     public async Task<ListResultDto<DistrictCityStateProvinceLookUpDto>> GetDistrictCityStateProvinceLookupAsync()
     {
         var stateProvinces = await _stateProvinceRepository.GetListAsync();
         return new ListResultDto<DistrictCityStateProvinceLookUpDto>(
             ObjectMapper.Map<List<StateProvince>, List<DistrictCityStateProvinceLookUpDto>>(stateProvinces));
-    }
-
-    public async Task<ListResultDto<DistrictCityCountryLookUpDto>> GetDistrictCityCountryLookupAsync()
-    {
-        var countries = await _countryRepository.GetListAsync();
-        return new ListResultDto<DistrictCityCountryLookUpDto>(ObjectMapper.Map<List<Country>, List<DistrictCityCountryLookUpDto>>(countries));
     }
 
     private static string NormalizeSorting(string sorting)
