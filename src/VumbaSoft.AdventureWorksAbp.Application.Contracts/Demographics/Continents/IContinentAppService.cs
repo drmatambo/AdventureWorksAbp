@@ -22,7 +22,7 @@ public interface IContinentAppService :
 
     Task<ContinentDto> CreateAsync(CreateContinentDto input);
 
-    Task UpdateContinentAsync(Guid id, UpdateContinentDto input);
+    Task UpdateAsync(Guid id, UpdateContinentDto input);
 
     Task DeleteAsync(Guid id);
 }

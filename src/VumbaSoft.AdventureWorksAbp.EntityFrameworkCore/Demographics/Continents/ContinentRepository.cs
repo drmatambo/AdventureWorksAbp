@@ -23,7 +23,7 @@ public class ContinentRepository : EfCoreRepository<AdventureWorksAbpDbContext, 
         var dbSet = await GetDbSetAsync();
 
         return await dbSet.IncludeDetails(includeDetails)
-            .OrderBy(x => x.Name)
+            //.OrderBy(x => x.Name)
             .FirstOrDefaultAsync(continent => continent.Name == name, GetCancellationToken(cancellationToken));
     }
 

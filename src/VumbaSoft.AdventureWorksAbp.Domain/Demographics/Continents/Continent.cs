@@ -9,7 +9,7 @@ namespace VumbaSoft.AdventureWorksAbp.Demographics.Continents;
 
 public class Continent : FullAuditedAggregateRoot<Guid>
 {
-    public virtual String Name { get; set; }
+    public virtual String Name { get; private set; }
     public virtual Int64 Population { get; set; }
     public virtual ICollection<Subcontinent> Subcontinents { get; set; }
     public virtual String Remarks { get; set; }
@@ -18,16 +18,16 @@ public class Continent : FullAuditedAggregateRoot<Guid>
     {
     }
 
-    public Continent(
+    internal Continent(
         Guid id,
         String name,
         Int64 population,
         String remarks
     ) : base(id)
     {
-        //SetName(name);
+        SetName(name);
         //TODO: Pending continent data validating
-        Name = name;
+        //Name = name;
         Population = population;
         Remarks = remarks;
         Subcontinents = new Collection<Subcontinent>();

@@ -114,13 +114,14 @@
     "CreateLocality": "Create",
     "EditLocality": "Edit",
     "LocalityDeletionConfirmationMessage": "Are you sure to delete the locality {0}?",
-    "Demographics:01001": "There is already an Continent with the same name: {name}",
-    "Demographics:01002": "There is already an Subcontinent author with the same name: {name}",
-    "Demographics:01003": "There is already an Country with the same name: {name}",
-    "Demographics:01004": "There is already an Region with the same name: {name}",
-    "Demographics:01005": "There is already an Satate / Province with the same name: {name}",
-    "Demographics:01006": "There is already an District / City with the same name: {name}",
-    "Demographics:01007": "There is already an Locality with the same name: {name}",
-    "Demographics:01008": "There is already an Facility with the same name: {name}"
+    "Demographics:01001": "There is already an Continent with the same name: {name}, the Continent name should be unique",
+    "Demographics:01002": "There is already an Subcontinent author with the same name: {name}, the Subcontinent name should be unique",
+    "Demographics:01003": "There is already an Country with the same name: {name}, the Country name should be unique",
+    "Demographics:01004": "There is already an Region with the same name: {name}, the Region name should be unique",
+    "Demographics:01005": "There is already an Satate / Province with the same name: {name}, the ProvinceState name should be unique",
+    "Demographics:01006": "There is already an District / City with the same name: {name} , the DistrictCity name should be unique",
+    "Demographics:01007": "There is already an Locality with the same name: {name}, the Locality name should be unique",
+    "Demographics:01008": "There is already an Facility with the same name: {name}, the Facility name should be unique",
+    "Demographics:01009": "A negative population number is not allowed: {population}"
   }
 }

@@ -92,7 +92,7 @@ public class ContinentAppService : CrudAppService<Continent, ContinentDto, Guid,
     }
     
     [Authorize(AdventureWorksAbpPermissions.Continent.Update)]
-    public async Task UpdateContinentAsync(Guid id, UpdateContinentDto input)
+    public async Task UpdateAsync(Guid id, UpdateContinentDto input)
     {
         var continent = await _continentRepository.GetAsync(id);
 
@@ -100,7 +100,9 @@ public class ContinentAppService : CrudAppService<Continent, ContinentDto, Guid,
         {
             await _continentManager.ChangeNameAsync(continent, input.Name);
         }
-        continent.Name = input.Name;
+
+        continent.Population = input.Population;
+        continent.Remarks = input.Remarks;
 
         await _continentRepository.UpdateAsync(continent);
     }

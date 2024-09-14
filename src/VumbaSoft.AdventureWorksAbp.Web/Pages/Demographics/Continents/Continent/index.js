@@ -50,7 +50,7 @@ $(function () {
                                 text: l('Delete'),
                                 visible: abp.auth.isGranted('Demographics.Continent.Delete'),
                                 confirmMessage: function (data) {
-                                    return l('ContinentDeletionConfirmationMessage', data.record.id);
+                                    return l('ContinentDeletionConfirmationMessage', data.record.name);
                                 },
                                 action: function (data) {
                                     service.delete(data.record.id)

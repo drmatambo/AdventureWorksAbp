@@ -58,7 +58,7 @@ $(function () {
                                 text: l('Delete'),
                                 visible: abp.auth.isGranted('Demographics.Locality.Delete'),
                                 confirmMessage: function (data) {
-                                    return l('LocalityDeletionConfirmationMessage', data.record.id);
+                                    return l('LocalityDeletionConfirmationMessage', data.record.name);
                                 },
                                 action: function (data) {
                                     service.delete(data.record.id)

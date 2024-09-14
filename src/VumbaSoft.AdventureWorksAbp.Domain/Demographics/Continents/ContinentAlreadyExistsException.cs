@@ -9,7 +9,8 @@ namespace VumbaSoft.AdventureWorksAbp.Demographics.Continents;
 
 public class ContinentAlreadyExistsException : BusinessException
 {
-    public ContinentAlreadyExistsException(string name) : base(AdventureWorksAbpDomainErrorCodes.ContinentNameAlreadyExists)
+    public ContinentAlreadyExistsException(string name) 
+        : base(AdventureWorksAbpDomainErrorCodes.ContinentNameAlreadyExists)
     {
         WithData("name", name);
     }    

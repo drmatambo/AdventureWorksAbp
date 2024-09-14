@@ -12,4 +12,5 @@ public static class AdventureWorksAbpDomainErrorCodes
     public const string DistrictCityNameAlreadyExists = "Demographics:01006";
     public const string LocalityNameAlreadyExists = "Demographics:01007";
     public const string FacilityNameAlreadyExists = "Demographics:01008";
+    public const string PopulationNegativeNumberNotAllowed = "Demographics:01009";
 }

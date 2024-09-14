@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Services;
+using VumbaSoft.AdventureWorksAbp.SharedDomainExceptions;
 
 namespace VumbaSoft.AdventureWorksAbp.Demographics.Continents;
 
@@ -25,9 +26,16 @@ public class ContinentManager : DomainService
         Check.NotNullOrWhiteSpace(name, nameof(name));
 
         var existingcontinent = await _continentRepository.FindByNameAsync(name);
+
         if (existingcontinent != null)
         {
             throw new ContinentAlreadyExistsException(name);
+        }
+
+        if (population <= 0) 
+        {
+            //throw new NegativeNumberNotAllowedException(population.ToString());
+            throw new PopulationNegativeNumberException(population.ToString());
         }
 
         return new Continent(
@@ -46,6 +54,7 @@ public class ContinentManager : DomainService
         Check.NotNullOrWhiteSpace(newName, nameof(newName));
 
         var existingcontinent = await _continentRepository.FindByNameAsync(newName);
+
         if (existingcontinent != null && existingcontinent.Id != continent.Id)
         {
             throw new ContinentAlreadyExistsException(newName);
